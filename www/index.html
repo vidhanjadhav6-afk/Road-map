@@ -1,0 +1,90 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>My Roadmap</title>
+<style>
+:root{--t:#f2f4f8;--m:#8b93a5;--a:#7dd3fc;--g:rgba(255,255,255,.07);--b:rgba(255,255,255,.13)}
+*{box-sizing:border-box;margin:0;-webkit-tap-highlight-color:transparent}
+body{min-height:100vh;color:var(--t);font:16px/1.4 system-ui,sans-serif;background:radial-gradient(800px 500px at 85% -10%,#1e2f55,transparent),radial-gradient(700px 500px at -10% 105%,#2b1f52,transparent),#0b0d12;padding:calc(env(safe-area-inset-top) + 22px) 18px calc(env(safe-area-inset-bottom) + 28px)}
+.glass{background:var(--g);border:1px solid var(--b);border-radius:24px;backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px)}
+h1{font-size:26px;font-weight:600;letter-spacing:-.4px}
+.sub{color:var(--m);font-size:14px;margin:2px 0 18px}
+.hero{padding:20px;margin-bottom:14px}
+.pct{font-size:56px;font-weight:700;letter-spacing:-2px;line-height:1}
+.bar{height:6px;border-radius:6px;background:var(--b);margin:14px 0 12px;overflow:hidden}
+.bar i{display:block;height:100%;width:0;background:var(--a);border-radius:6px;transition:width .4s}
+.next{color:var(--m);font-size:14px}.next b{color:var(--t);font-weight:600}
+ul{list-style:none;padding:6px 0;margin-bottom:14px}
+li{display:flex;align-items:center;gap:14px;padding:14px 18px}
+li+li{border-top:1px solid var(--b)}
+li b{width:78px;font-weight:600;font-variant-numeric:tabular-nums;color:var(--m);font-size:14px}
+li span{flex:1}
+li i{width:22px;height:22px;border-radius:50%;border:2px solid var(--b)}
+li.on span{color:var(--m);text-decoration:line-through}
+li.on i{background:var(--a);border-color:var(--a)}
+button{width:100%;padding:15px;border-radius:18px;border:1px solid var(--b);background:var(--g);color:var(--t);font:600 15px system-ui;margin-bottom:10px}
+button.p{background:var(--a);color:#06121c;border-color:var(--a)}
+#msg{color:var(--m);font-size:13px;text-align:center;min-height:20px}
+</style></head><body>
+<h1>Today</h1><p class="sub" id="date"></p>
+<div class="glass hero"><div class="pct" id="pct">0%</div><div class="bar"><i id="bar"></i></div><div class="next">Next: <b id="next"></b></div></div>
+<ul class="glass" id="list"></ul>
+<button class="p" onclick="enable()">Turn on reminders</button>
+<button onclick="test()">Send a test in 5 seconds</button>
+<p id="msg"></p>
+<script>
+const S=[
+{t:"5:30 AM",n:"Wake up",d:[0,1,2,3,4,5,6]},
+{t:"5:45 AM",n:"Morning workout (home)",d:[1,2,3,4,5]},
+{t:"4:30 PM",n:"Cricket session",d:[2,4,6]},
+{t:"7:00 PM",n:"B.Pharm review",d:[1,2,3,4,5]},
+{t:"6:00 PM",n:"Weekly review",d:[0]},
+{t:"10:00 PM",n:"Sleep",d:[0,1,2,3,4,5,6]}
+];
+const $=s=>document.querySelector(s);
+const parse=t=>{const[a,p]=t.split(' ');let[h,m]=a.split(':').map(Number);if(p==='PM'&&h<12)h+=12;if(p==='AM'&&h===12)h=0;return[h,m]};
+const mins=t=>{const[h,m]=parse(t);return h*60+m};
+const day=new Date().getDay(),key='done-'+new Date().toDateString();
+let done=[];try{done=JSON.parse(localStorage.getItem(key)||'[]')}catch(e){}
+const today=S.map((s,i)=>({...s,id:i})).filter(s=>s.d.includes(day)).sort((a,b)=>mins(a.t)-mins(b.t));
+$('#date').textContent=new Date().toLocaleDateString(undefined,{weekday:'long',day:'numeric',month:'long'});
+function msg(x){$('#msg').textContent=x}
+function tog(id){done=done.includes(id)?done.filter(x=>x!==id):[...done,id];try{localStorage.setItem(key,JSON.stringify(done))}catch(e){}render()}
+function render(){
+ const n=new Date(),nm=n.getHours()*60+n.getMinutes();
+ const nx=today.find(s=>!done.includes(s.id)&&mins(s.t)>=nm);
+ const p=today.length?Math.round(done.length/today.length*100):0;
+ $('#pct').textContent=p+'%';$('#bar').style.width=p+'%';
+ $('#next').textContent=nx?nx.t+'  '+nx.n:'Nothing left today';
+ $('#list').innerHTML=today.map(s=>'<li class="'+(done.includes(s.id)?'on':'')+'" onclick="tog('+s.id+')"><b>'+s.t+'</b><span>'+s.n+'</span><i></i></li>').join('');
+}
+const LN=window.Capacitor&&Capacitor.Plugins&&Capacitor.Plugins.LocalNotifications;
+async function setup(){
+ if(!LN){msg('Reminders work only in the installed Android app.');return false}
+ const p=await LN.requestPermissions();
+ if(p.display!=='granted'){msg('Allow notifications for this app in phone settings.');return false}
+ try{const e=await LN.checkExactNotificationSetting();if(e.exact_alarm!=='granted')await LN.changeExactNotificationSetting()}catch(e){}
+ await LN.createChannel({id:'sessions',name:'Session reminders',importance:5,visibility:1,vibration:true,lights:true});
+ return true;
+}
+async function enable(){
+ try{
+  if(!await setup())return;
+  const pend=await LN.getPending();
+  if(pend.notifications.length)await LN.cancel({notifications:pend.notifications.map(x=>({id:x.id}))});
+  const list=[];
+  S.forEach((s,i)=>{const[h,m]=parse(s.t);s.d.forEach(d=>list.push({id:i*10+d+1,title:s.n,body:'Starting now ('+s.t+')',channelId:'sessions',schedule:{on:{weekday:d+1,hour:h,minute:m},allowWhileIdle:true}}))});
+  await LN.schedule({notifications:list});
+  try{localStorage.setItem('armed','1')}catch(e){}
+  msg('Reminders on: '+list.length+' scheduled weekly.');
+ }catch(e){msg('Error: '+e.message)}
+}
+async function test(){
+ try{
+  if(!await setup())return;
+  await LN.schedule({notifications:[{id:999,title:'Test reminder',body:'Reminders work. Close the app and try again.',channelId:'sessions',schedule:{at:new Date(Date.now()+5000),allowWhileIdle:true}}]});
+  msg('Test sent. Close the app now.');
+ }catch(e){msg('Error: '+e.message)}
+}
+render();setInterval(render,60000);
+try{if(localStorage.getItem('armed'))enable()}catch(e){}
+</script></body></html>
