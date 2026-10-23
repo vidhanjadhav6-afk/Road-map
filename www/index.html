@@ -1,90 +1,122 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>My Roadmap</title>
-<style>
-:root{--t:#f2f4f8;--m:#8b93a5;--a:#7dd3fc;--g:rgba(255,255,255,.07);--b:rgba(255,255,255,.13)}
-*{box-sizing:border-box;margin:0;-webkit-tap-highlight-color:transparent}
-body{min-height:100vh;color:var(--t);font:16px/1.4 system-ui,sans-serif;background:radial-gradient(800px 500px at 85% -10%,#1e2f55,transparent),radial-gradient(700px 500px at -10% 105%,#2b1f52,transparent),#0b0d12;padding:calc(env(safe-area-inset-top) + 22px) 18px calc(env(safe-area-inset-bottom) + 28px)}
-.glass{background:var(--g);border:1px solid var(--b);border-radius:24px;backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px)}
-h1{font-size:26px;font-weight:600;letter-spacing:-.4px}
-.sub{color:var(--m);font-size:14px;margin:2px 0 18px}
-.hero{padding:20px;margin-bottom:14px}
-.pct{font-size:56px;font-weight:700;letter-spacing:-2px;line-height:1}
-.bar{height:6px;border-radius:6px;background:var(--b);margin:14px 0 12px;overflow:hidden}
-.bar i{display:block;height:100%;width:0;background:var(--a);border-radius:6px;transition:width .4s}
-.next{color:var(--m);font-size:14px}.next b{color:var(--t);font-weight:600}
-ul{list-style:none;padding:6px 0;margin-bottom:14px}
-li{display:flex;align-items:center;gap:14px;padding:14px 18px}
-li+li{border-top:1px solid var(--b)}
-li b{width:78px;font-weight:600;font-variant-numeric:tabular-nums;color:var(--m);font-size:14px}
-li span{flex:1}
-li i{width:22px;height:22px;border-radius:50%;border:2px solid var(--b)}
-li.on span{color:var(--m);text-decoration:line-through}
-li.on i{background:var(--a);border-color:var(--a)}
-button{width:100%;padding:15px;border-radius:18px;border:1px solid var(--b);background:var(--g);color:var(--t);font:600 15px system-ui;margin-bottom:10px}
-button.p{background:var(--a);color:#06121c;border-color:var(--a)}
-#msg{color:var(--m);font-size:13px;text-align:center;min-height:20px}
-</style></head><body>
-<h1>Today</h1><p class="sub" id="date"></p>
-<div class="glass hero"><div class="pct" id="pct">0%</div><div class="bar"><i id="bar"></i></div><div class="next">Next: <b id="next"></b></div></div>
-<ul class="glass" id="list"></ul>
-<button class="p" onclick="enable()">Turn on reminders</button>
-<button onclick="test()">Send a test in 5 seconds</button>
-<p id="msg"></p>
-<script>
-const S=[
-{t:"5:30 AM",n:"Wake up",d:[0,1,2,3,4,5,6]},
-{t:"5:45 AM",n:"Morning workout (home)",d:[1,2,3,4,5]},
-{t:"4:30 PM",n:"Cricket session",d:[2,4,6]},
-{t:"7:00 PM",n:"B.Pharm review",d:[1,2,3,4,5]},
-{t:"6:00 PM",n:"Weekly review",d:[0]},
-{t:"10:00 PM",n:"Sleep",d:[0,1,2,3,4,5,6]}
-];
-const $=s=>document.querySelector(s);
-const parse=t=>{const[a,p]=t.split(' ');let[h,m]=a.split(':').map(Number);if(p==='PM'&&h<12)h+=12;if(p==='AM'&&h===12)h=0;return[h,m]};
-const mins=t=>{const[h,m]=parse(t);return h*60+m};
-const day=new Date().getDay(),key='done-'+new Date().toDateString();
-let done=[];try{done=JSON.parse(localStorage.getItem(key)||'[]')}catch(e){}
-const today=S.map((s,i)=>({...s,id:i})).filter(s=>s.d.includes(day)).sort((a,b)=>mins(a.t)-mins(b.t));
-$('#date').textContent=new Date().toLocaleDateString(undefined,{weekday:'long',day:'numeric',month:'long'});
-function msg(x){$('#msg').textContent=x}
-function tog(id){done=done.includes(id)?done.filter(x=>x!==id):[...done,id];try{localStorage.setItem(key,JSON.stringify(done))}catch(e){}render()}
-function render(){
- const n=new Date(),nm=n.getHours()*60+n.getMinutes();
- const nx=today.find(s=>!done.includes(s.id)&&mins(s.t)>=nm);
- const p=today.length?Math.round(done.length/today.length*100):0;
- $('#pct').textContent=p+'%';$('#bar').style.width=p+'%';
- $('#next').textContent=nx?nx.t+'  '+nx.n:'Nothing left today';
- $('#list').innerHTML=today.map(s=>'<li class="'+(done.includes(s.id)?'on':'')+'" onclick="tog('+s.id+')"><b>'+s.t+'</b><span>'+s.n+'</span><i></i></li>').join('');
-}
-const LN=window.Capacitor&&Capacitor.Plugins&&Capacitor.Plugins.LocalNotifications;
-async function setup(){
- if(!LN){msg('Reminders work only in the installed Android app.');return false}
- const p=await LN.requestPermissions();
- if(p.display!=='granted'){msg('Allow notifications for this app in phone settings.');return false}
- try{const e=await LN.checkExactNotificationSetting();if(e.exact_alarm!=='granted')await LN.changeExactNotificationSetting()}catch(e){}
- await LN.createChannel({id:'sessions',name:'Session reminders',importance:5,visibility:1,vibration:true,lights:true});
- return true;
-}
-async function enable(){
- try{
-  if(!await setup())return;
-  const pend=await LN.getPending();
-  if(pend.notifications.length)await LN.cancel({notifications:pend.notifications.map(x=>({id:x.id}))});
-  const list=[];
-  S.forEach((s,i)=>{const[h,m]=parse(s.t);s.d.forEach(d=>list.push({id:i*10+d+1,title:s.n,body:'Starting now ('+s.t+')',channelId:'sessions',schedule:{on:{weekday:d+1,hour:h,minute:m},allowWhileIdle:true}}))});
-  await LN.schedule({notifications:list});
-  try{localStorage.setItem('armed','1')}catch(e){}
-  msg('Reminders on: '+list.length+' scheduled weekly.');
- }catch(e){msg('Error: '+e.message)}
-}
-async function test(){
- try{
-  if(!await setup())return;
-  await LN.schedule({notifications:[{id:999,title:'Test reminder',body:'Reminders work. Close the app and try again.',channelId:'sessions',schedule:{at:new Date(Date.now()+5000),allowWhileIdle:true}}]});
-  msg('Test sent. Close the app now.');
- }catch(e){msg('Error: '+e.message)}
-}
-render();setInterval(render,60000);
-try{if(localStorage.getItem('armed'))enable()}catch(e){}
-</script></body></html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VIDHAN'S DUAL-TRACK PROTOCOL</title>
+    <style>
+        body { background-color: #121212; color: #e0e0e0; font-family: -apple-system, sans-serif; margin: 0; padding: 20px; line-height: 1.6; }
+        h1, h2, h3 { color: #ffffff; border-bottom: 1px solid #333; padding-bottom: 5px; }
+        .page { margin-bottom: 40px; padding: 15px; background-color: #1e1e1e; border-radius: 8px; }
+        .nav { font-weight: bold; color: #bb86fc; font-size: 0.9em; margin-bottom: 15px; }
+        .time-block { margin-bottom: 15px; }
+        .time { font-weight: bold; color: #03dac6; }
+        .highlight { color: #cf6679; font-weight: bold; }
+        ul { padding-left: 20px; }
+    </style>
+</head>
+<body>
+
+    <!-- PAGE 1 -->
+    <div class="page" id="start">
+        <div class="nav">START | MON - FRI | SAT | SUN[span_0](start_span)[span_0](end_span)</div>
+        <h1>VIDHAN'S DUAL-TRACK PROTOCOL[span_1](start_span)[span_1](end_span)</h1>
+        <h2>Complete the degree. Land the job. Train like a pro.[span_2](start_span)[span_2](end_span)</h2>
+        <p>B.PHARM to PHARMACOVIGILANCE | TENNIS CRICKET to ELITE PERFORMANCE[span_3](start_span)[span_3](end_span)</p>
+
+        <h3>MISSION EXECUTION STANDARD[span_4](start_span)[span_4](end_span)</h3>
+        <ul>
+            <li><strong>Complete B.Pharm:</strong> Pass the degree without sacrificing career preparation.[span_5](start_span)[span_5](end_span)</li>
+            <li><strong>Secure remote PV work:</strong> Build practical PV knowledge, a portfolio, and a job-ready CV.[span_6](start_span)[span_6](end_span)</li>
+            <li><strong>Train for elite tennis cricket:</strong> Train consistently, compete under pressure, and measure performance.[span_7](start_span)[span_7](end_span)</li>
+        </ul>
+
+        <h3>DAILY NON-NEGOTIABLES[span_8](start_span)[span_8](end_span)</h3>
+        <ul>
+            <li>Conditioning / recovery[span_9](start_span)[span_9](end_span)</li>
+            <li>PV study / portfolio[span_10](start_span)[span_10](end_span)</li>
+            <li>Cricket skill / match exposure[span_11](start_span)[span_11](end_span)</li>
+            <li>Sleep protected[span_12](start_span)[span_12](end_span)</li>
+        </ul>
+        <p class="highlight">"THEORIES STOP. EXECUTION BEGINS.[span_13](start_span)"[span_13](end_span)</p>
+        <p>The schedule is only valuable if you execute it repeatedly. Keep this open or save it to your phone. See it every morning.[span_14](start_span)[span_14](end_span)</p>
+        <small>PAGE 1/4[span_15](start_span)[span_15](end_span)</small>
+    </div>
+
+    <!-- PAGE 2 -->
+    <div class="page" id="mon-fri">
+        <div class="nav">START | MON - FRI | SAT | SUN[span_16](start_span)[span_16](end_span)</div>
+        <h2>Mon - Fri: The Grind[span_17](start_span)[span_17](end_span)</h2>
+        <p>Build the career while building the athlete[span_18](start_span)[span_18](end_span)</p>
+
+        <div class="time-block"><span class="time">5:45 AM - 6:30 AM:</span> Conditioning. 45 min. Sprints, core, and leg strength. Done before the commute drains you.[span_19](start_span)[span_19](end_span)</div>
+        <div class="time-block"><span class="time">6:30 AM - 7:15 AM:</span> Prep & Exit. Shower, high-protein breakfast, grab bag. Leave without delay.[span_20](start_span)[span_20](end_span)</div>
+        <div class="time-block"><span class="time">7:15 AM - 6:30 PM:</span> Commute & College. THE HACK: Use the 2-hour commute to read ICH guidelines and MedDRA terms. Do college assignments during campus breaks.[span_21](start_span)[span_21](end_span)</div>
+        <div class="time-block"><span class="time">6:30 PM - 7:00 PM:</span> Return & Refuel. Quick snack. Change clothes immediately. No sitting on the couch.[span_22](start_span)[span_22](end_span)</div>
+        <div class="time-block"><span class="time">7:00 PM - 8:30 PM:</span> Elite Cricket Nets. Pure skill work: pace, accuracy, timing, and power hitting.[span_23](start_span)[span_23](end_span)</div>
+        <div class="time-block"><span class="time">8:30 PM - 9:30 PM:</span> PV Laptop Work. Uninterrupted deep work: Argus tutorials, mock case narratives, or PV certification coursework.[span_24](start_span)[span_24](end_span)</div>
+        <div class="time-block"><span class="time">9:30 PM - 10:30 PM:</span> Free Life + Dinner. Decompress. AI animation, family/girlfriend time, and dinner.[span_25](start_span)[span_25](end_span)</div>
+        <div class="time-block"><span class="time">10:30 PM - 5:45 AM:</span> Sleep 7h 15m. Mandatory physical shutdown. Protect recovery.[span_26](start_span)[span_26](end_span)</div>
+
+        <h3>TRACKS[span_27](start_span)[span_27](end_span)</h3>
+        <ul>
+            <li><strong>TRACK A (PV):</strong> B.Pharm > ICH / MedDRA > case-processing skills > portfolio > applications[span_28](start_span)[span_28](end_span)</li>
+            <li><strong>TRACK B (CRICKET):</strong> Conditioning > nets > competition > measurable performance[span_29](start_span)[span_29](end_span)</li>
+        </ul>
+        <small>PAGE 2/4[span_30](start_span)[span_30](end_span)</small>
+    </div>
+
+    <!-- PAGE 3 -->
+    <div class="page" id="sat">
+        <div class="nav">START | MON - FRI | SAT | SUN[span_31](start_span)[span_31](end_span)</div>
+        <h2>Saturday[span_32](start_span)[span_32](end_span)</h2>
+        <p>The Reality Check: test the skills under pressure[span_33](start_span)[span_33](end_span)</p>
+
+        <div class="time-block"><span class="time">6:30 AM - 7:30 AM:</span> Wake & Prep. Extra sleep. Solid breakfast. Prepare for competition.[span_34](start_span)[span_34](end_span)</div>
+        <div class="time-block"><span class="time">8:00 AM - 12:00 PM:</span> Match Day / Trials. Play a competitive local match or attend a trial. Test yourself against strong players, not only friends.[span_35](start_span)[span_35](end_span)</div>
+        <div class="time-block"><span class="time">12:00 PM - 2:00 PM:</span> Recovery + Lunch. Hydrate, eat, and physically rest.[span_36](start_span)[span_36](end_span)</div>
+        <div class="time-block"><span class="time">2:00 PM - 4:30 PM:</span> Deep PV Study. 2.5 hours of focused work: complex mock cases and clinical-data study.[span_37](start_span)[span_37](end_span)</div>
+        <div class="time-block"><span class="time">4:30 PM - 6:00 PM:</span> College Overflow. Finish remaining B.Pharm assignments or study for upcoming exams.[span_38](start_span)[span_38](end_span)</div>
+        <div class="time-block"><span class="time">6:00 PM onwards:</span> Total Disconnect. Go out, spend time with loved ones, make lo-fi music, or work on AI webcomics. The night is yours.[span_39](start_span)[span_39](end_span)</div>
+
+        <h3>SATURDAY SCORECARD[span_40](start_span)[span_40](end_span)</h3>
+        <ul>
+            <li>Competitive match / trial attended[span_41](start_span)[span_41](end_span)</li>
+            <li>Batting / skill performance[span_42](start_span)[span_42](end_span)</li>
+            <li>PV deep-work completed[span_43](start_span)[span_43](end_span)</li>
+            <li>One weakness identified[span_44](start_span)[span_44](end_span)</li>
+        </ul>
+        <small>PAGE 3/4[span_45](start_span)[span_45](end_span)</small>
+    </div>
+
+    <!-- PAGE 4 -->
+    <div class="page" id="sun">
+        <div class="nav">START | MON - FRI | SAT | SUN[span_46](start_span)[span_46](end_span)</div>
+        <h2>Sunday[span_47](start_span)[span_47](end_span)</h2>
+        <p>Recovery & The Setup: repair the body, arm the week[span_48](start_span)[span_48](end_span)</p>
+
+        <div class="time-block"><span class="time">7:00 AM - 10:00 AM:</span> Active Recovery. Sleep in slightly. Light stretching or walking. No heavy lifting or intense nets.[span_49](start_span)[span_49](end_span)</div>
+        <div class="time-block"><span class="time">10:00 AM - 1:00 PM:</span> Free Time. Family time, chores, or hobbies.[span_50](start_span)[span_50](end_span)</div>
+        <div class="time-block"><span class="time">1:00 PM - 3:00 PM:</span> Portfolio Building. Format PV CV. Finalize mock case narratives into clean PDFs. Search LinkedIn for remote PV internships/healthcare agencies.[span_51](start_span)[span_51](end_span)</div>
+        <div class="time-block"><span class="time">3:00 PM - 7:00 PM:</span> Free Time. Complete disconnect.[span_52](start_span)[span_52](end_span)</div>
+        <div class="time-block"><span class="time">7:00 PM - 8:30 PM:</span> The Monday Setup. Pack college bag, lay out morning gym clothes, and download next week's PV materials for the commute.[span_53](start_span)[span_53](end_span)</div>
+        <div class="time-block"><span class="time">8:30 PM - 9:30 PM:</span> Dinner + Wind Down. Relax and get off screens.[span_54](start_span)[span_54](end_span)</div>
+        <div class="time-block"><span class="time">9:30 PM:</span> Early Sleep. Reset your rhythm for the 5:45 AM Monday wake-up.[span_55](start_span)[span_55](end_span)</div>
+
+        <h3>MONDAY LAUNCH CHECKLIST[span_56](start_span)[span_56](end_span)</h3>
+        <ul>
+            <li>[ ] College bag packed[span_57](start_span)[span_57](end_span)</li>
+            <li>[ ] Training clothes ready[span_58](start_span)[span_58](end_span)</li>
+            <li>[ ] PV videos / PDFs downloaded[span_59](start_span)[span_59](end_span)</li>
+            <li>[ ] CV/portfolio task identified[span_60](start_span)[span_60](end_span)</li>
+            <li>[ ] Monday alarm set[span_61](start_span)[span_61](end_span)</li>
+            <li>[ ] Screens off before sleep[span_62](start_span)[span_62](end_span)</li>
+        </ul>
+        
+        <h3 class="highlight">THE RULE[span_63](start_span)[span_63](end_span)</h3>
+        <p>Miss one block? Resume at the next block. Do not turn one failure into a failed day. Consistency beats heroic bursts.[span_64](start_span)[span_64](end_span)</p>
+        <small>PAGE 4/4[span_65](start_span)[span_65](end_span)</small>
+    </div>
+
+</body>
+</html>
