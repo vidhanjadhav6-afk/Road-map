@@ -1,122 +1,538 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>VIDHAN'S DUAL-TRACK PROTOCOL</title>
-    <style>
-        body { background-color: #121212; color: #e0e0e0; font-family: -apple-system, sans-serif; margin: 0; padding: 20px; line-height: 1.6; }
-        h1, h2, h3 { color: #ffffff; border-bottom: 1px solid #333; padding-bottom: 5px; }
-        .page { margin-bottom: 40px; padding: 15px; background-color: #1e1e1e; border-radius: 8px; }
-        .nav { font-weight: bold; color: #bb86fc; font-size: 0.9em; margin-bottom: 15px; }
-        .time-block { margin-bottom: 15px; }
-        .time { font-weight: bold; color: #03dac6; }
-        .highlight { color: #cf6679; font-weight: bold; }
-        ul { padding-left: 20px; }
-    </style>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Dual-Track</title>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Dual-Track">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="theme-color" content="#0B1120">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="icon" href="icon-192.png">
+<link rel="manifest" href="manifest.webmanifest">
+<style>
+:root{--bg:#F8FAFC;--card:#fff;--ink:#111827;--mute:#6B7280;--line:#E5E7EB;--tab:#CBD5E1;--tabtxt:#fff;
+--train:#16A34A;--cricket:#EA580C;--pv:#2563EB;--college:#7C3AED;--rest:#64748B;--free:#0D9488;--gold:#D97706}
+@media(prefers-color-scheme:dark){:root{--bg:#0B1120;--card:#151E2E;--ink:#F1F5F9;--mute:#94A3B8;--line:#243044;--tab:#334155;--tabtxt:#0B1120}}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.4 -apple-system,system-ui,Segoe UI,Roboto,sans-serif;padding:env(safe-area-inset-top) 0 calc(24px + env(safe-area-inset-bottom))}
+.wrap{max-width:480px;margin:0 auto;padding:14px 16px 96px}
+.top{margin-bottom:14px;display:flex;justify-content:space-between;font-size:11px;font-weight:700;letter-spacing:.04em}
+.top span:last-child{color:var(--mute);font-weight:600}
+nav{display:flex;gap:6px;margin:12px 0 16px;position:sticky;top:0;padding:6px 0;background:var(--bg);z-index:5}
+nav button{flex:1;border:1px solid var(--tab);background:var(--card);color:var(--ink);border-radius:20px;padding:9px 0;font:700 11px system-ui;letter-spacing:.03em}
+nav button.on{background:var(--ink);color:var(--tabtxt);border-color:var(--ink)}
+h1{font-size:24px;margin:0}.sub{color:var(--mute);font-size:12px;margin:2px 0 14px}
+.sec{font-size:11px;font-weight:700;letter-spacing:.06em;color:var(--mute);margin:20px 0 8px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px 14px 12px 18px;margin-bottom:8px;position:relative;overflow:hidden}
+.card:before{content:"";position:absolute;left:0;top:0;bottom:0;width:5px;background:var(--c,var(--rest))}
+.t{font-size:11px;font-weight:700;color:var(--c)}.n{font-size:16px;font-weight:700;margin:1px 0 2px}.d{font-size:13px;color:var(--mute)}
+.card.past{opacity:.45}
+.card.now{border-color:var(--c);box-shadow:0 0 0 1px var(--c)}
+.badge{position:absolute;right:12px;top:12px;font-size:10px;font-weight:800;color:#fff;background:var(--c);border-radius:10px;padding:2px 8px}
+.hero{background:var(--c,var(--pv));color:#fff;border-radius:16px;padding:16px;margin-bottom:14px}
+.hero .k{font-size:11px;font-weight:700;letter-spacing:.06em;opacity:.85}
+.hero .n{font-size:22px;margin:4px 0}.hero .d{color:#fff;opacity:.9}
+.bar{height:6px;background:rgba(255,255,255,.3);border-radius:3px;margin-top:12px;overflow:hidden}
+.bar i{display:block;height:100%;background:#fff;border-radius:3px}
+.meta{display:flex;justify-content:space-between;font-size:12px;margin-top:6px;opacity:.95}
+.chk{display:flex;align-items:center;gap:12px;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px 14px;margin-bottom:8px;font-weight:700;width:100%;color:var(--ink);text-align:left;font-size:14px}
+.box{width:24px;height:24px;border-radius:50%;border:2px solid var(--c);flex:none;display:grid;place-items:center;color:#fff;font-size:14px}
+.chk.on .box{background:var(--c)}.chk.on .box:after{content:"\2713"}
+.chk.on span{text-decoration:line-through;opacity:.6}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}.grid .chk{margin:0;font-size:12px;padding:10px}
+.grid .box{border-radius:6px;width:20px;height:20px;font-size:12px}
+.sc{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:6px 14px 10px}
+.sc label{display:block;font-size:12px;font-weight:700;margin-top:10px}
+.sc input{width:100%;background:transparent;border:0;border-bottom:1px solid var(--mute);color:var(--ink);font:14px system-ui;padding:6px 0;outline:0}
+.quote{background:var(--pv);color:#fff;border-radius:14px;padding:18px;text-align:center;font-weight:800;margin:16px 0 6px}
+.quote small{display:block;font-weight:400;opacity:.85;margin-top:4px;font-size:12px}
+.wk{margin-top:10px;background:transparent;border:1px solid var(--c);color:var(--c);border-radius:14px;padding:5px 12px;font:700 11px system-ui}
+.ph{border-top:1px solid var(--line);margin-top:12px;padding-top:10px}
+.ph.cur{background:color-mix(in srgb,var(--c) 14%,transparent);border-radius:8px;padding:10px;margin-left:-6px;margin-right:-6px}
+.ph .pt{display:flex;justify-content:space-between;gap:8px;font-size:14px;font-weight:700}
+.ph .pt span{font-size:11px;color:var(--c);white-space:nowrap}
+.ph .pd{font-size:12px;color:var(--mute);margin:2px 0 4px}
+.ph ul{margin:4px 0 0;padding-left:18px;font-size:13px}
+.warn{font-size:12px;font-weight:700;color:var(--cricket);margin-top:12px}
+.bnav{position:fixed;left:0;right:0;bottom:0;display:flex;background:var(--card);border-top:1px solid var(--line);padding:6px 8px calc(6px + env(safe-area-inset-bottom));z-index:10}
+.bnav button{flex:1;background:none;border:0;color:var(--mute);display:flex;flex-direction:column;align-items:center;gap:2px;font:700 10px system-ui;padding:4px 0}
+.bnav button.on{color:var(--ink)}
+.bnav svg{width:22px;height:22px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.bnav button.on svg{stroke:var(--pv)}
+.pills{display:flex;gap:6px;margin:6px 0 14px}
+.pills button{flex:1;border:1px solid var(--tab);background:var(--card);color:var(--ink);border-radius:18px;padding:8px 0;font:700 11px system-ui}
+.pills button.on{background:var(--ink);color:var(--tabtxt);border-color:var(--ink)}
+.stat{display:flex;gap:8px;margin-bottom:8px}
+.stat div{flex:1;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:10px 12px}
+.stat b{display:block;font-size:20px}.stat span{font-size:11px;color:var(--mute)}
+.week{display:flex;justify-content:space-between;padding:0 4px}
+.wd{display:flex;flex-direction:column;align-items:center;gap:5px;font-size:10px;font-weight:700;color:var(--mute)}
+.wd i{width:28px;height:28px;border-radius:50%;border:2px solid var(--tab);display:grid;place-items:center;font-style:normal;font-size:13px;color:#fff}
+.wd.full i{background:var(--train);border-color:var(--train)}.wd.full i:after{content:"\2713"}
+.wd.part i{border-color:var(--train)}
+.wd.today{color:var(--ink)}.wd.today i{box-shadow:0 0 0 3px color-mix(in srgb,var(--pv) 40%,transparent)}
+.tiles{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.tile{background:var(--card);border:1px solid var(--line);border-left:5px solid var(--c);border-radius:12px;padding:12px;text-align:left;color:var(--ink);font:inherit}
+.tile b{display:block;font-size:14px}.tile span{font-size:11px;color:var(--mute)}
+.wp{position:relative;height:300px;border-radius:22px;overflow:hidden;margin:2px 0 14px;color:#fff;background:#0b1120}
+.wpsvg,.wpsvg svg{position:absolute;inset:0;width:100%;height:100%}
+.wpshade{position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,var(--st,.3)),rgba(0,0,0,0) 32%,rgba(0,0,0,var(--sb,.68)) 100%)}
+.wpimg{position:absolute;inset:0;background-size:cover;background-repeat:no-repeat}
+.wptop{position:absolute;top:14px;left:16px;right:14px;display:flex;justify-content:space-between;align-items:center;font-weight:700;font-size:13px;text-shadow:0 1px 6px rgba(0,0,0,.5)}
+.shuf{width:34px;height:34px;border-radius:50%;border:0;background:rgba(255,255,255,.22);color:#fff;font-size:18px;backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px)}
+.wpq{position:absolute;left:18px;right:18px;bottom:38px;font-size:22px;font-weight:800;line-height:1.25;text-shadow:0 2px 12px rgba(0,0,0,.55)}
+.wpd{position:absolute;left:18px;bottom:15px;font-size:11px;opacity:.85;letter-spacing:.05em;font-weight:600}
+.prog{display:flex;align-items:center;gap:16px;background:var(--card);border:1px solid var(--line);border-radius:16px;padding:14px 16px;margin-bottom:12px}
+.ring{width:84px;height:84px;flex:none}
+.rbg{fill:none;stroke:var(--line);stroke-width:8}
+.rfg{fill:none;stroke:var(--train);stroke-width:8;stroke-linecap:round;transition:stroke-dasharray .5s}
+.ring text{fill:var(--ink);font:800 19px system-ui}
+.prog b{display:block;font-size:16px}.prog span{display:block;font-size:13px;color:var(--mute);margin-top:2px}.prog small{display:block;font-size:12px;color:var(--train);font-weight:700;margin-top:6px}
+.mini{display:flex;align-items:center;gap:10px;margin:0 0 14px;font-size:12px;font-weight:700;color:var(--mute)}
+.mini .b2{flex:1;height:7px;background:var(--line);border-radius:4px;overflow:hidden}.mini .b2 i{display:block;height:100%;background:var(--train);border-radius:4px;transition:width .5s}
+.card.hasTk{padding-right:56px}.hasTk .badge{right:54px}
+.tk{position:absolute;right:12px;top:50%;transform:translateY(-50%);width:30px;height:30px;border-radius:50%;border:2px solid var(--c);background:transparent;color:#fff;font-size:16px;display:grid;place-items:center;padding:0}
+.tk.on{background:var(--c)}.tk.on:after{content:"\2713"}
+.card.done .n{text-decoration:line-through;opacity:.55}
+.chip{border:0;border-radius:17px;padding:0 12px;height:34px;background:rgba(255,255,255,.22);color:#fff;font:700 12px system-ui;backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px)}
+.chip.on{background:#fff;color:#111}
+.ex{display:flex;align-items:flex-start;gap:10px;width:100%;background:none;border:0;border-top:1px solid var(--line);color:var(--ink);text-align:left;padding:9px 0;font-size:13px}
+.bx{width:20px;height:20px;border-radius:6px;border:2px solid var(--train);flex:none;display:grid;place-items:center;color:#fff;font-size:12px;font-style:normal;margin-top:1px}
+.ex.on .bx{background:var(--train)}.ex.on .bx:after{content:"\2713"}.ex.on span{text-decoration:line-through;opacity:.55}
+.note{text-align:center;color:var(--mute);font-size:12px}
+</style>
+<style id="glass">
+/* ===== Liquid glass ===== */
+:root{--bg:#e9eefb;--card:rgba(255,255,255,.58);--line:rgba(255,255,255,.75);--track:rgba(100,116,139,.22);--sep:rgba(15,23,42,.10);--hl:rgba(255,255,255,.85);--shadow:0 10px 30px rgba(30,41,90,.14);--blobs:.55}
+@media(prefers-color-scheme:dark){:root{--bg:#060a14;--card:rgba(255,255,255,.075);--line:rgba(255,255,255,.16);--track:rgba(255,255,255,.14);--sep:rgba(255,255,255,.10);--hl:rgba(255,255,255,.15);--shadow:0 10px 30px rgba(0,0,0,.38);--blobs:1}}
+body{background:var(--bg);position:relative}
+body::before{content:"";position:fixed;inset:-25%;z-index:-1;pointer-events:none;opacity:var(--blobs);
+ background:radial-gradient(38% 30% at 18% 14%,rgba(99,102,241,.60),transparent 70%),radial-gradient(34% 28% at 86% 26%,rgba(236,72,153,.42),transparent 70%),radial-gradient(40% 32% at 78% 82%,rgba(249,115,22,.38),transparent 70%),radial-gradient(34% 28% at 12% 86%,rgba(20,184,166,.42),transparent 70%);
+ animation:drift 26s ease-in-out infinite alternate}
+@keyframes drift{from{transform:translate3d(-2%,-1%,0) scale(1)}to{transform:translate3d(3%,2%,0) scale(1.12)}}
+@media(prefers-reduced-motion:reduce){body::before{animation:none}}
+.wrap{padding-bottom:112px}
+.card,.prog,.stat div,.chk,.tile,.sc,.pills button,.bnav{-webkit-backdrop-filter:blur(22px) saturate(170%);backdrop-filter:blur(22px) saturate(170%)}
+.card,.prog,.stat div,.chk,.tile,.sc{background:linear-gradient(145deg,color-mix(in srgb,var(--c,#fff) 10%,var(--card)),var(--card));border:1px solid var(--line);box-shadow:inset 0 1px 0 rgba(255,255,255,.30),inset 0 -1px 0 rgba(255,255,255,.05),var(--shadow);border-radius:22px;position:relative;overflow:hidden}
+.card::after,.prog::after,.stat div::after,.chk::after,.tile::after,.sc::after,.hero::after{content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;background:linear-gradient(135deg,rgba(255,255,255,.22),rgba(255,255,255,0) 38%,rgba(255,255,255,0) 72%,rgba(255,255,255,.07))}
+.card{padding-left:26px}
+.card::before{left:10px;top:14px;bottom:14px;width:4px;border-radius:3px;box-shadow:0 0 12px var(--c)}
+.card.now{box-shadow:inset 0 1px 0 rgba(255,255,255,.35),0 0 0 1px var(--c),0 0 26px color-mix(in srgb,var(--c) 40%,transparent)}
+.tile{border-left:1px solid var(--line);padding:12px 12px 12px 24px}
+.tile::before{content:"";position:absolute;left:11px;top:13px;bottom:13px;width:4px;border-radius:3px;background:var(--c);box-shadow:0 0 10px var(--c)}
+.hero{position:relative;overflow:hidden;border-radius:28px;background:linear-gradient(145deg,color-mix(in srgb,var(--c,#2563eb) 86%,#fff),color-mix(in srgb,var(--c,#2563eb) 60%,#000));border:1px solid rgba(255,255,255,.38);box-shadow:inset 0 1px 0 rgba(255,255,255,.55),0 16px 36px color-mix(in srgb,var(--c,#2563eb) 42%,transparent)}
+.wp{border-radius:30px;border:1px solid rgba(255,255,255,.32);box-shadow:inset 0 1px 0 rgba(255,255,255,.45),var(--shadow)}
+.quote{border:1px solid rgba(255,255,255,.35);box-shadow:inset 0 1px 0 rgba(255,255,255,.5),0 14px 32px rgba(37,99,235,.4);border-radius:26px}
+.pills button{background:var(--card);border:1px solid var(--line);box-shadow:inset 0 1px 0 rgba(255,255,255,.28),var(--shadow)}
+.pills button.on{background:var(--ink);color:var(--tabtxt);border-color:transparent}
+.bnav{left:12px;right:12px;bottom:calc(10px + env(safe-area-inset-bottom));border-radius:34px;padding:6px;background:var(--card);border:1px solid var(--line);box-shadow:inset 0 1px 0 rgba(255,255,255,.35),0 18px 44px rgba(0,0,0,.35);-webkit-backdrop-filter:blur(30px) saturate(190%);backdrop-filter:blur(30px) saturate(190%)}
+.bnav button{border-radius:26px;padding:7px 0}
+.bnav button.on{background:var(--hl);box-shadow:inset 0 1px 0 rgba(255,255,255,.4)}
+.rbg{stroke:var(--track)}.mini .b2{background:var(--track)}
+.ph{border-top-color:var(--sep)}.ex{border-top-color:var(--sep)}
+.sc input{border-bottom-color:var(--mute)}
+.card.past{opacity:.5}
+
+/* ===== LIQUID GLASS ===== */
+:root{--glass:rgba(255,255,255,.58);--glass2:rgba(255,255,255,.82);--gb:rgba(255,255,255,.85);--gshadow:0 10px 30px rgba(31,41,80,.14);--spec:inset 0 1px 0 rgba(255,255,255,.95),inset 0 -1px 0 rgba(255,255,255,.35);--hi:rgba(255,255,255,.55);--navshadow:0 14px 40px rgba(31,41,80,.22)}
+@media(prefers-color-scheme:dark){:root{--glass:rgba(255,255,255,.075);--glass2:rgba(255,255,255,.17);--gb:rgba(255,255,255,.17);--gshadow:0 10px 30px rgba(0,0,0,.38);--spec:inset 0 1px 0 rgba(255,255,255,.30),inset 0 -1px 0 rgba(255,255,255,.04);--hi:rgba(255,255,255,.2);--navshadow:0 14px 40px rgba(0,0,0,.5)}}
+body::before{content:"";position:fixed;inset:-25%;z-index:-1;pointer-events:none;background:
+ radial-gradient(38% 28% at 18% 14%,rgba(59,130,246,.55),transparent 70%),
+ radial-gradient(34% 28% at 86% 30%,rgba(236,72,153,.40),transparent 70%),
+ radial-gradient(44% 34% at 72% 84%,rgba(249,115,22,.38),transparent 70%),
+ radial-gradient(40% 30% at 8% 80%,rgba(20,184,166,.42),transparent 70%);
+ animation:drift 20s ease-in-out infinite alternate}
+@keyframes drift{to{transform:translate3d(4%,-3%,0) scale(1.1)}}
+@media(prefers-reduced-motion:reduce){body::before{animation:none}}
+.card,.prog,.stat div,.chk,.tile,.sc{background:linear-gradient(135deg,var(--hi),rgba(255,255,255,0) 55%),var(--glass);border:1px solid var(--gb);box-shadow:var(--gshadow),var(--spec);-webkit-backdrop-filter:blur(22px) saturate(170%);backdrop-filter:blur(22px) saturate(170%);border-radius:22px}
+.card{padding-left:24px}.card:before{top:14px;bottom:14px;left:9px;width:4px;border-radius:4px;box-shadow:0 0 10px var(--c)}
+.card.now{border-color:color-mix(in srgb,var(--c) 70%,transparent);box-shadow:0 0 0 1px color-mix(in srgb,var(--c) 60%,transparent),0 0 30px color-mix(in srgb,var(--c) 38%,transparent),var(--spec)}
+.tile{border-left:1px solid var(--gb)}.tile:before{content:"";display:block;width:22px;height:4px;border-radius:4px;background:var(--c);margin-bottom:8px;box-shadow:0 0 10px var(--c)}
+.hero{background:linear-gradient(135deg,rgba(255,255,255,.34),rgba(255,255,255,0) 58%),color-mix(in srgb,var(--c,var(--pv)) 74%,transparent);-webkit-backdrop-filter:blur(26px) saturate(190%);backdrop-filter:blur(26px) saturate(190%);border:1px solid rgba(255,255,255,.38);box-shadow:0 16px 44px color-mix(in srgb,var(--c,var(--pv)) 38%,transparent),inset 0 1px 0 rgba(255,255,255,.55),inset 0 -1px 0 rgba(255,255,255,.12);border-radius:28px}
+.wp{border-radius:30px;box-shadow:0 20px 50px rgba(0,0,0,.4)}
+.wp:after{content:"";position:absolute;inset:0;border-radius:inherit;box-shadow:inset 0 1px 0 rgba(255,255,255,.45),inset 0 0 0 1px rgba(255,255,255,.14);pointer-events:none}
+.shuf,.chip{border:1px solid rgba(255,255,255,.38);box-shadow:inset 0 1px 0 rgba(255,255,255,.45),0 4px 14px rgba(0,0,0,.25)}
+.chip.on{background:rgba(255,255,255,.88);color:#111}
+.bnav{left:50%;right:auto;transform:translateX(-50%);width:calc(100% - 28px);max-width:452px;bottom:calc(12px + env(safe-area-inset-bottom));padding:6px;border-radius:32px;background:linear-gradient(180deg,var(--hi),rgba(255,255,255,0) 70%),var(--glass);border:1px solid var(--gb);box-shadow:var(--navshadow),var(--spec);-webkit-backdrop-filter:blur(30px) saturate(190%);backdrop-filter:blur(30px) saturate(190%)}
+.bnav button{border-radius:26px;padding:7px 0;transition:background .25s,transform .15s}
+.bnav button.on{background:var(--glass2);box-shadow:var(--spec),0 2px 10px rgba(0,0,0,.18)}
+.wrap{padding-bottom:116px}
+.pills button{background:var(--glass);border:1px solid var(--gb);box-shadow:var(--spec);-webkit-backdrop-filter:blur(18px);backdrop-filter:blur(18px)}
+.pills button.on{background:var(--glass2);color:var(--ink);border-color:var(--gb);box-shadow:var(--spec),0 4px 14px rgba(0,0,0,.18)}
+.wk{background:var(--glass);border:1px solid color-mix(in srgb,var(--c) 70%,transparent);box-shadow:var(--spec)}
+.ex{border-top:1px solid var(--gb)}
+.quote{background:linear-gradient(135deg,rgba(255,255,255,.3),rgba(255,255,255,0) 55%),color-mix(in srgb,var(--pv) 70%,transparent);-webkit-backdrop-filter:blur(20px) saturate(180%);backdrop-filter:blur(20px) saturate(180%);border:1px solid rgba(255,255,255,.35);box-shadow:0 14px 36px color-mix(in srgb,var(--pv) 35%,transparent),inset 0 1px 0 rgba(255,255,255,.5);border-radius:24px}
+.wd i{background:var(--glass);border-color:var(--gb);box-shadow:var(--spec)}
+.wd.full i{background:var(--train);border-color:rgba(255,255,255,.5)}
+.mini .b2{background:var(--glass2);box-shadow:var(--spec)}
+.rbg{stroke:var(--glass2)}
+.chk:active,.tile:active,.bnav button:active,.wk:active,.pills button:active{transform:scale(.97)}
+.tk{background:var(--glass);box-shadow:var(--spec)}.tk.on{background:var(--c)}
+.sc input{border-bottom:1px solid var(--gb)}
+
+body::after{content:"";position:fixed;left:0;right:0;bottom:0;height:150px;z-index:9;pointer-events:none;background:linear-gradient(to top,var(--bg) 0%,color-mix(in srgb,var(--bg) 78%,transparent) 42%,transparent 100%)}
+.bnav{background:linear-gradient(180deg,var(--hi),rgba(255,255,255,0) 70%),var(--navtint)}
+:root{--navtint:rgba(255,255,255,.72)}
+@media(prefers-color-scheme:dark){:root{--navtint:rgba(22,27,46,.66)}}
+
+.topr{display:flex;align-items:center;gap:10px}
+.gear{position:relative;width:34px;height:34px;border-radius:50%;border:1px solid var(--gb);background:var(--glass);box-shadow:var(--spec);color:var(--ink);display:grid;place-items:center;padding:0;-webkit-backdrop-filter:blur(18px);backdrop-filter:blur(18px)}
+.gear svg{width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.gear.on:after{content:"";position:absolute;top:2px;right:2px;width:9px;height:9px;border-radius:50%;background:var(--train);box-shadow:0 0 8px var(--train)}
+#sheet{position:fixed;inset:0;z-index:50;display:none}#sheet.show{display:block}
+.sheet-bg{position:absolute;inset:0;background:rgba(0,0,0,.45);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px)}
+.sheet{position:absolute;left:0;right:0;bottom:0;max-width:480px;margin:0 auto;max-height:88vh;overflow:auto;border-radius:30px 30px 0 0;padding:10px 18px calc(24px + env(safe-area-inset-bottom));background:linear-gradient(180deg,var(--hi),rgba(255,255,255,0) 40%),var(--navtint);border:1px solid var(--gb);box-shadow:0 -10px 50px rgba(0,0,0,.45),var(--spec);-webkit-backdrop-filter:blur(34px) saturate(190%);backdrop-filter:blur(34px) saturate(190%);animation:up .28s ease-out}
+@keyframes up{from{transform:translateY(40px);opacity:0}}
+.grab{width:40px;height:5px;border-radius:3px;background:var(--mute);opacity:.5;margin:2px auto 10px}
+.sh-h{display:flex;justify-content:space-between;align-items:center;font-size:20px}
+.x{background:var(--glass2);border:1px solid var(--gb);color:var(--ink);border-radius:16px;padding:6px 14px;font:700 13px system-ui}
+.row{display:flex;justify-content:space-between;align-items:center;gap:12px;background:var(--glass);border:1px solid var(--gb);border-radius:16px;padding:12px 14px;margin-bottom:8px;box-shadow:var(--spec);font-size:14px}
+.row small{display:block;color:var(--mute);font-size:12px;margin-top:2px}
+.sw{width:50px;height:30px;border-radius:15px;border:0;background:var(--glass2);position:relative;flex:none;box-shadow:inset 0 0 0 1px var(--gb);transition:background .2s;padding:0}
+.sw i{position:absolute;top:3px;left:3px;width:24px;height:24px;border-radius:50%;background:#fff;box-shadow:0 2px 6px rgba(0,0,0,.35);transition:transform .2s}
+.sw.on{background:var(--train)}.sw.on i{transform:translateX(20px)}
+.seg{display:flex;gap:6px}.seg button{flex:1;background:var(--glass);border:1px solid var(--gb);color:var(--ink);border-radius:14px;padding:10px 0;font:700 12px system-ui;box-shadow:var(--spec)}
+.seg button.on{background:var(--glass2);border-color:var(--ink)}
+.big{width:100%;margin-top:8px;background:var(--glass2);border:1px solid var(--gb);color:var(--ink);border-radius:16px;padding:12px;font:700 14px system-ui;box-shadow:var(--spec)}
+.fine{font-size:12px;color:var(--mute);margin:14px 2px 0}
+#toast{position:fixed;left:14px;right:14px;top:calc(10px + env(safe-area-inset-top));z-index:60;max-width:452px;margin:0 auto;border-radius:22px;padding:14px 16px;background:linear-gradient(135deg,var(--hi),rgba(255,255,255,0) 55%),var(--navtint);border:1px solid var(--gb);box-shadow:0 16px 44px rgba(0,0,0,.45),var(--spec);-webkit-backdrop-filter:blur(28px) saturate(190%);backdrop-filter:blur(28px) saturate(190%);transform:translateY(-160%);transition:transform .35s cubic-bezier(.2,.9,.3,1.1)}
+#toast.show{transform:none}
+#toast b{display:block;font-size:15px}#toast span{display:block;font-size:13px;color:var(--mute);margin:3px 0 10px}
+#toast button{margin-right:8px;background:var(--glass2);border:1px solid var(--gb);color:var(--ink);border-radius:14px;padding:7px 14px;font:700 12px system-ui}
+
+.pnav{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:2px 0 12px}
+.pnav b{font-size:14px;text-align:center;flex:1}
+.pnav button{width:38px;height:38px;border-radius:50%;border:1px solid var(--gb);background:var(--glass);box-shadow:var(--spec);color:var(--ink);font-size:20px;line-height:1;padding:0}
+.pnav button:disabled{opacity:.28}
+.bars{display:flex;gap:7px;align-items:flex-end}
+.bc{flex:1;display:flex;flex-direction:column;align-items:center;gap:5px;font-size:10px;color:var(--mute);font-weight:700}
+.bc span{color:var(--ink);font-size:10px}
+.bc i{font-style:normal;color:var(--ink);font-size:11px}.bc em{font-style:normal;font-size:10px}
+.bt{width:100%;height:120px;border-radius:12px;background:var(--glass);border:1px solid var(--gb);position:relative;overflow:hidden;box-shadow:var(--spec)}
+.bf{position:absolute;left:0;right:0;bottom:0;background:var(--h);border-radius:10px;transition:height .5s}
+.bc.today .bt{box-shadow:0 0 0 2px var(--pv)}.bc.fut{opacity:.4}
+.cal{display:grid;grid-template-columns:repeat(7,1fr);gap:6px}
+.dow{text-align:center;font-size:10px;font-weight:700;color:var(--mute);padding-bottom:2px}
+.mc{aspect-ratio:1;border-radius:12px;border:1px solid var(--gb);background:var(--glass);display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:12px;box-shadow:var(--spec)}
+.mc b{font-size:13px}.mc small{font-size:8.5px;font-weight:700;opacity:.9}
+.mc.h{background:var(--h);border-color:transparent;color:var(--t)}
+.mc.today{box-shadow:0 0 0 2px var(--pv)}.mc.fut{opacity:.35}
+.pills button.on{border-color:var(--ink)}
+.leg{display:flex;flex-wrap:wrap;gap:6px 12px;align-items:center;font-size:11px;color:var(--mute);margin:10px 2px 14px}
+.leg span{display:inline-block;width:12px;height:12px;border-radius:4px;background:var(--h);margin-right:4px;vertical-align:-2px}
+
+.thumbs{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:8px}
+.th{aspect-ratio:4/3;border-radius:14px;background-size:cover;background-position:center;border:2px solid transparent;position:relative;box-shadow:var(--spec);padding:0}
+.th.on{border-color:var(--ink)}
+.th.add{background:var(--glass);border:1px dashed var(--gb);color:var(--ink);font-size:24px;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.th.add small{font-size:10px;color:var(--mute);font-weight:700}
+.rm{position:absolute;top:4px;right:4px;width:22px;height:22px;border-radius:50%;border:0;background:rgba(0,0,0,.65);color:#fff;font-size:11px;padding:0}
+</style>
 </head>
 <body>
+<div class="wrap">
+ <div class="top"><span>VIDHAN'S DUAL-TRACK PROTOCOL</span><div class="topr"><span id="clock"></span><button class="gear" onclick="openSettings()" aria-label="Settings"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg></button></div></div>
+ <main id="main"></main>
+</div>
+<input type="file" id="wpfile" accept="image/*" multiple hidden onchange="addPhoto(this)">
+<div id="sheet"></div><div id="toast"></div>
+<div class="bnav" id="bnav"></div>
+<script>
+const COL={train:"var(--train)",cricket:"var(--cricket)",pv:"var(--pv)",college:"var(--college)",rest:"var(--rest)",free:"var(--free)",gold:"var(--gold)"};
+const S={
+mf:[["05:45","06:30","Conditioning · 45 min","Sprints, core, and leg strength. Done before the commute drains you.","train"],
+["06:30","07:15","Prep & Exit","Shower, high-protein breakfast, grab bag. Leave without delay.","rest"],
+["07:15","18:30","Commute & College","THE HACK: Use the 2-hour commute to read ICH guidelines and MedDRA terms. Do college assignments during campus breaks.","college"],
+["18:30","19:00","Return & Refuel","Quick snack. Change clothes immediately. No sitting on the couch.","rest"],
+["19:00","20:30","Elite Cricket Nets","Pure skill work: pace, accuracy, timing, and power hitting.","cricket"],
+["20:30","21:30","PV Laptop Work","Uninterrupted deep work: Argus tutorials, mock case narratives, or PV certification coursework.","pv"],
+["21:30","22:30","Free Life + Dinner","Decompress. AI animation, family/girlfriend time, and dinner.","free"],
+["22:30","05:45","Sleep · 7h 15m","Mandatory physical shutdown. Protect recovery.","rest"]],
+sat:[["06:30","07:30","Wake & Prep","Extra sleep. Solid breakfast. Prepare for competition.","rest"],
+["08:00","12:00","Match Day / Trials","Play a competitive local match or attend a trial. Test yourself against strong players, not only friends.","cricket"],
+["12:00","14:00","Recovery + Lunch","Hydrate, eat, and physically rest.","rest"],
+["14:00","16:30","Deep PV Study","2.5 hours of focused work: complex mock cases and clinical-data study.","pv"],
+["16:30","18:00","College Overflow","Finish remaining B.Pharm assignments or study for upcoming exams.","college"],
+["18:00","23:59","Total Disconnect","Go out, spend time with loved ones, make lo-fi music, or work on AI webcomics. The night is yours.","free"]],
+sun:[["07:00","10:00","Active Recovery","Sleep in slightly. Light stretching or walking. No heavy lifting or intense nets.","train"],
+["10:00","13:00","Free Time","Family time, chores, or hobbies.","free"],
+["13:00","15:00","Portfolio Building","Format PV CV. Finalize mock case narratives into clean PDFs. Search LinkedIn for remote PV internships/healthcare agencies.","pv"],
+["15:00","19:00","Free Time","Complete disconnect.","free"],
+["19:00","20:30","The Monday Setup","Pack college bag, lay out morning gym clothes, and download next week's PV materials for the commute.","college"],
+["20:30","21:30","Dinner + Wind Down","Relax and get off screens.","rest"],
+["21:30","23:59","Early Sleep","Reset your rhythm for the 5:45 AM Monday wake-up.","rest"]]};
+const W=[["05:45","05:50","1. Dynamic Warm-Up","5 min · Wake up your central nervous system immediately.",["Jumping Jacks: 60 seconds","High Knees: 60 seconds","Bodyweight Squats: 2 sets of 15 reps"]],
+["05:50","06:05","2. Explosive Leg Power","15 min · Build fast-twitch muscle response for hitting and bowling.",["Jump Squats: 4 sets of 12 reps","Alternating Jumping Lunges: 3 sets of 20 reps (10 per leg)","Glute Bridges: 3 sets of 15 reps"]],
+["06:05","06:20","3. Core Armor","15 min · Core strength for rotational torque and lower back protection.",["Forearm Plank: 3 sets of 60 seconds","Russian Twists: 3 sets of 30 reps","Leg Raises: 3 sets of 15 reps","Mountain Climbers: 3 sets of 45 seconds"]],
+["06:20","06:30","4. Sprint & Stamina Finisher","10 min · Simulate the cardio demand of running between the wickets.",["Burpees: 4 sets of 45 sec on, 15 sec rest","Shadow Sprints (running in place): 3 sets of 30 sec max effort, then 30 sec slow walk"]]];
+let openW=false;
+const NN=[["Conditioning / recovery","train"],["PV study / portfolio","pv"],["Cricket skill / match exposure","cricket"],["Sleep protected","rest"]];
+const SCORE=["Competitive match / trial attended","Batting / skill performance","PV deep-work completed","One weakness identified"];
+const LAUNCH=["College bag packed","Training clothes ready","PV videos / PDFs downloaded","CV / portfolio task identified","Monday alarm set","Screens off before sleep"];
+const ICON={home:'<svg viewBox="0 0 24 24"><path d="M3 11l9-8 9 8"/><path d="M5 10v10h14V10"/></svg>',today:'<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>',plan:'<svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg>',work:'<svg viewBox="0 0 24 24"><path d="M6 7v10M18 7v10M3 9.5v5M21 9.5v5M6 12h12"/></svg>',progress:'<svg viewBox="0 0 24 24"><path d="M5 21V11M12 21V4M19 21v-6"/></svg>',mission:'<svg viewBox="0 0 24 24"><path d="M5 21V4"/><path d="M5 4h12l-2 4 2 4H5"/></svg>'};
+const TABS=[["home","Home"],["today","Today"],["plan","Plan"],["work","Workout"],["progress","Progress"]];
+const HEAD={mf:["Mon – Fri: The Grind","Build the career while building the athlete"],sat:["Saturday","The Reality Check: test the skills under pressure"],sun:["Sunday","Recovery & The Setup: repair the body, arm the week"]};
 
-    <!-- PAGE 1 -->
-    <div class="page" id="start">
-        <div class="nav">START | MON - FRI | SAT | SUN[span_0](start_span)[span_0](end_span)</div>
-        <h1>VIDHAN'S DUAL-TRACK PROTOCOL[span_1](start_span)[span_1](end_span)</h1>
-        <h2>Complete the degree. Land the job. Train like a pro.[span_2](start_span)[span_2](end_span)</h2>
-        <p>B.PHARM to PHARMACOVIGILANCE | TENNIS CRICKET to ELITE PERFORMANCE[span_3](start_span)[span_3](end_span)</p>
+const m=s=>{const[a,b]=s.split(":");return +a*60+ +b};
+const f12=s=>{let[h,mi]=s.split(":").map(Number);const ap=h<12?"AM":"PM";return(h%12||12)+":"+String(mi).padStart(2,"0")+" "+ap};
+const dur=x=>{x=Math.max(0,Math.round(x));const h=Math.floor(x/60),mi=x%60;return(h?h+"h ":"")+mi+"m"};
+const pad=n=>String(n).padStart(2,"0");
+const dkey=d=>d.getFullYear()+"-"+pad(d.getMonth()+1)+"-"+pad(d.getDate());
+const monday=()=>{const d=new Date();d.setDate(d.getDate()-((d.getDay()+6)%7));return dkey(d)};
+const todayKey=()=>{const g=new Date().getDay();return g==6?"sat":g==0?"sun":"mf"};
+const store={get(k,d){try{return JSON.parse(localStorage.getItem(k))??d}catch(e){return d}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
 
-        <h3>MISSION EXECUTION STANDARD[span_4](start_span)[span_4](end_span)</h3>
-        <ul>
-            <li><strong>Complete B.Pharm:</strong> Pass the degree without sacrificing career preparation.[span_5](start_span)[span_5](end_span)</li>
-            <li><strong>Secure remote PV work:</strong> Build practical PV knowledge, a portfolio, and a job-ready CV.[span_6](start_span)[span_6](end_span)</li>
-            <li><strong>Train for elite tennis cricket:</strong> Train consistently, compete under pressure, and measure performance.[span_7](start_span)[span_7](end_span)</li>
-        </ul>
+let tab="home",plan=todayKey();
+function inBlock(b,now){const s=m(b[0]),e=m(b[1]);return s<=e?(now>=s&&now<e):(now>=s||now<e)}
+function phases(live){const now=new Date(),nm=now.getHours()*60+now.getMinutes();
+ return W.map(p=>`<div class="ph ${live&&nm>=m(p[0])&&nm<m(p[1])?"cur":""}"><div class="pt"><b>${p[2]}</b><span>${f12(p[0])} – ${f12(p[1])}</span></div><div class="pd">${p[3]}</div><ul>${p[4].map(x=>"<li>"+x+"</li>").join("")}</ul></div>`).join("")+`<div class="warn">No cricket bat during this block.</div>`}
+function card(b,cls="",idx=-1){const wo=b[2].startsWith("Conditioning"),tick=idx>=0&&!b[2].startsWith("Sleep"),dn=tick&&store.get("tb:"+dkey(new Date()),{})[idx];
+ return `<div class="card ${cls} ${tick?"hasTk":""} ${dn?"done":""}" style="--c:${COL[b[4]]}"><div class="t">${f12(b[0])} – ${f12(b[1])}</div><div class="n">${b[2]}</div><div class="d">${b[3]}</div>${wo?`<button class="wk" onclick="openW=!openW;render()">${openW?"Hide workout ▴":"Show workout ▾"}</button>${openW?phases(cls=="now"):""}`:""}${cls=="now"?'<span class="badge">NOW</span>':""}${tick?`<button class="tk ${dn?"on":""}" onclick="tb(${idx})" aria-label="mark done"></button>`:""}</div>`}
+function checks(list,key,grid){const st=store.get(key,{});
+ return `<div class="${grid?"grid":""}">`+list.map((x,i)=>{const lab=Array.isArray(x)?x[0]:x,c=Array.isArray(x)?COL[x[1]]:"var(--train)";
+ return `<button class="chk ${st[i]?"on":""}" style="--c:${c}" onclick="tog('${key}',${i})"><i class="box"></i><span>${lab}</span></button>`}).join("")+`</div>`}
+function tog(key,i){const st=store.get(key,{});st[i]=!st[i];store.set(key,st);render()}
+function score(){const key="sc:"+monday(),st=store.get(key,{});
+ return `<div class="sec" style="color:var(--gold)">SATURDAY SCORECARD</div><div class="sc">`+SCORE.map((s,i)=>`<label>${s}<input value="${(st[i]||"").replace(/"/g,"&quot;")}" oninput="sv('${key}',${i},this.value)"></label>`).join("")+`</div>`}
+function sv(key,i,v){const st=store.get(key,{});st[i]=v;store.set(key,st)}
+function dayExtras(k){
+ if(k=="sat")return score();
+ if(k=="sun")return `<div class="sec" style="color:var(--train)">MONDAY LAUNCH CHECKLIST</div>`+checks(LAUNCH,"ln:"+monday(),true)+
+  `<div class="sec" style="color:var(--gold)">THE RULE</div><div class="card" style="--c:var(--gold)"><div class="d" style="color:var(--ink)">Miss one block? Resume at the next block. Do not turn one failure into a failed day. Consistency beats heroic bursts.</div></div>`;
+ if(k=="mf")return `<div class="card" style="--c:var(--pv)"><div class="n" style="font-size:13px">TRACK A — PV</div><div class="d">B.Pharm › ICH / MedDRA › case-processing skills › portfolio › applications</div></div>
+ <div class="card" style="--c:var(--cricket)"><div class="n" style="font-size:13px">TRACK B — CRICKET</div><div class="d">Conditioning › nets › competition › measurable performance</div></div>`;
+ return "";}
+function heroPhase(nm){const p=W.find(p=>nm>=m(p[0])&&nm<m(p[1]));if(!p)return "";
+ return `<div style="margin-top:14px;padding-top:12px;border-top:1px solid rgba(255,255,255,.35)"><div class="k" style="font-size:11px;font-weight:700;letter-spacing:.06em;opacity:.85">${p[2].toUpperCase()} · ${dur(m(p[1])-nm)} LEFT</div><ul style="margin:6px 0 0;padding-left:18px;font-size:14px">${p[4].map(x=>"<li>"+x+"</li>").join("")}</ul></div>`}
+function hero(k){const now=new Date(),nm=now.getHours()*60+now.getMinutes(),sch=S[k];
+ const cur=sch.find(b=>inBlock(b,nm));
+ if(cur){const s=m(cur[0]);let e=m(cur[1]);let el=nm-s;if(el<0)el+=1440;let tot=e-s;if(tot<=0)tot+=1440;
+  const nxt=sch[(sch.indexOf(cur)+1)%sch.length];
+  return `<div class="hero" style="--c:${COL[cur[4]]}"><div class="k">NOW · ENDS ${f12(cur[1])}</div><div class="n">${cur[2]}</div><div class="d">${cur[3]}</div><div class="bar"><i style="width:${Math.min(100,el/tot*100)}%"></i></div><div class="meta"><span>${dur(tot-el)} left</span><span>Next: ${nxt[2]}</span></div>${cur[2].startsWith("Conditioning")?heroPhase(nm):""}</div>`}
+ const nxt=sch.find(b=>m(b[0])>nm);
+ if(nxt)return `<div class="hero" style="--c:var(--rest)"><div class="k">UP NEXT · ${f12(nxt[0])}</div><div class="n">${nxt[2]}</div><div class="d">Starts in ${dur(m(nxt[0])-nm)}. ${nxt[3]}</div></div>`;
+ return `<div class="hero" style="--c:var(--rest)"><div class="k">DAY DONE</div><div class="n">Rest up</div><div class="d">Protect your sleep. Tomorrow starts clean.</div></div>`}
+function schedule(k,live){const now=new Date(),nm=now.getHours()*60+now.getMinutes();
+ return S[k].map((b,i)=>{let cls="";if(live){if(inBlock(b,nm))cls="now";else if(m(b[1])<=nm&&m(b[0])<m(b[1]))cls="past"}return card(b,cls,live?i:-1)}).join("")}
+const Q=["Discipline is choosing what you want most over what you want now.","Small blocks, done daily, build big careers.","Show up. Sweat. Study. Repeat.","The scoreboard is built in the morning.","You don't need motivation. You need the next block.","Train like the trial is tomorrow.","Consistency beats heroic bursts.","Be the player they scout and the pharmacist they hire.","One more rep. One more page. One more day.","Your future self is watching this block.","Earn the weekend. Then own it.","Nets today, tournaments tomorrow.","Do the boring work brilliantly.","Progress is quiet. Keep going.","Win the morning, win the day.","Pressure is a privilege. Prepare for it.","Every case narrative sharpens the career.","Rest is part of the plan. So is the next sprint.","Miss a block? Resume at the next one.","Be relentless on the basics.","Strong body. Sharp mind. Clear plan.","Dream big. Schedule it.","Every legend has a training arc.","Power up. Next block.","Limits are just the next level.","Your comeback story starts at dawn.","Believe in the one who trains at 5:45."];
+function rng(a){return()=>{a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^(a>>>15),1|a);t=t+Math.imul(t^(t>>>7),61|t)^t;return((t^(t>>>14))>>>0)/4294967296}}
+const stars=(r,n,ym)=>Array.from({length:n},()=>`<circle cx="${(r()*390).toFixed(1)}" cy="${(r()*ym).toFixed(1)}" r="${(r()*1.3+.3).toFixed(2)}" fill="#fff" opacity="${(r()*.7+.3).toFixed(2)}"/>`).join("");
+const svg=x=>`<svg viewBox="0 0 390 320" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">${x}</svg>`;
+const BL=(id,s)=>`<filter id="${id}" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="${s}"/></filter>`;
+const WP=[
+ r=>svg(`<defs><linearGradient id="a" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#1e1b4b"/><stop offset=".55" stop-color="#be185d"/><stop offset="1" stop-color="#fb923c"/></linearGradient></defs><rect width="390" height="320" fill="url(#a)"/>${stars(r,25,90)}<circle cx="${(200+r()*120).toFixed(0)}" cy="190" r="46" fill="#fde68a" opacity=".95"/><path d="M0 230 C80 190 150 215 230 235 S340 230 390 205 V320 H0Z" fill="#7c2d12" opacity=".78"/><path d="M0 255 C70 235 140 255 210 265 S330 255 390 240 V320 H0Z" fill="#431407" opacity=".92"/><path d="M0 285 C90 270 160 290 250 295 S350 285 390 275 V320 H0Z" fill="#1c0a04"/>`),
+ r=>svg(`<defs><linearGradient id="a" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#050816"/><stop offset="1" stop-color="#312e81"/></linearGradient></defs><rect width="390" height="320" fill="url(#a)"/>${stars(r,70,200)}<mask id="mm"><rect width="390" height="320" fill="#fff"/><circle cx="312" cy="70" r="24" fill="#000"/></mask><circle cx="300" cy="78" r="26" fill="#fef9c3" mask="url(#mm)"/><path d="M0 255 L70 175 L120 220 L190 145 L260 225 L320 180 L390 240 V320 H0Z" fill="#1e293b"/><path d="M0 290 L60 240 L130 275 L210 225 L290 280 L350 250 L390 270 V320 H0Z" fill="#0f172a"/>`),
+ r=>svg(`<defs>${BL("b",16)}</defs><rect width="390" height="320" fill="#020617"/>${stars(r,55,170)}<g filter="url(#b)"><path d="M-20 140 C80 40 160 190 250 90 S380 60 420 120 L420 190 C330 140 260 230 170 170 S40 230 -20 190Z" fill="#34d399" opacity=".6"/><path d="M-20 100 C70 20 170 120 260 50 S380 40 420 80 L420 130 C330 100 250 170 170 120 S50 160 -20 140Z" fill="#a78bfa" opacity=".55"/><path d="M-20 170 C90 120 170 220 260 150 S370 130 420 160 L420 200 C340 180 250 240 170 205 S40 230 -20 215Z" fill="#22d3ee" opacity=".35"/></g><path d="M0 262 L60 218 L110 246 L180 198 L250 252 L320 218 L390 256 V320 H0Z" fill="#020617"/>`),
+ r=>svg(`<defs><linearGradient id="a" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#312e81"/><stop offset=".6" stop-color="#db2777"/><stop offset="1" stop-color="#fdba74"/></linearGradient><linearGradient id="s" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#7c3aed"/><stop offset="1" stop-color="#1e1b4b"/></linearGradient><clipPath id="c"><rect width="390" height="200"/></clipPath></defs><rect width="390" height="200" fill="url(#a)"/><circle cx="195" cy="200" r="56" fill="#fff7ed" clip-path="url(#c)" opacity=".95"/><rect y="200" width="390" height="120" fill="url(#s)"/><rect x="150" y="207" width="90" height="3" rx="1.5" fill="#fff7ed" opacity=".7"/><rect x="165" y="218" width="60" height="3" rx="1.5" fill="#fff7ed" opacity=".55"/><rect x="175" y="230" width="40" height="3" rx="1.5" fill="#fff7ed" opacity=".4"/><rect x="183" y="243" width="24" height="3" rx="1.5" fill="#fff7ed" opacity=".3"/><path d="M0 262 Q50 254 100 262 T200 262 T300 262 T400 262" stroke="#fff" stroke-opacity=".18" fill="none" stroke-width="2"/><path d="M0 288 Q50 280 100 288 T200 288 T300 288 T400 288" stroke="#fff" stroke-opacity=".12" fill="none" stroke-width="2"/>`),
+ r=>svg(`<defs><linearGradient id="a" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#0f0a2a"/><stop offset="1" stop-color="#5b21b6"/></linearGradient><linearGradient id="s" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fde047"/><stop offset="1" stop-color="#ec4899"/></linearGradient><clipPath id="c"><rect width="390" height="200"/></clipPath></defs><rect width="390" height="320" fill="url(#a)"/>${stars(r,30,120)}<circle cx="195" cy="165" r="72" fill="url(#s)" clip-path="url(#c)"/><rect x="110" y="168" width="170" height="3" fill="#3b1a7a"/><rect x="110" y="178" width="170" height="4" fill="#3b1a7a"/><rect x="110" y="189" width="170" height="6" fill="#3b1a7a"/><rect y="200" width="390" height="120" fill="#12082e"/><g stroke="#f0abfc" stroke-opacity=".6" stroke-width="1.2"><path d="M0 206H390M0 216H390M0 232H390M0 256H390M0 292H390"/>${[-300,-200,-120,-60,0,60,120,180,195,210,270,330,390,450,510,590,690].map(x=>`<path d="M195 200L${x} 320"/>`).join("")}</g>`),
+ r=>svg(`<rect width="390" height="320" fill="#0b1120"/>${stars(r,30,320)}<circle cx="150" cy="150" r="115" fill="#2563eb" opacity=".65" style="mix-blend-mode:screen"/><circle cx="250" cy="175" r="105" fill="#ea580c" opacity=".65" style="mix-blend-mode:screen"/><circle cx="200" cy="160" r="150" fill="none" stroke="#fff" stroke-opacity=".12"/><circle cx="200" cy="160" r="95" fill="none" stroke="#fff" stroke-opacity=".1"/>`),
+ r=>svg(`<defs><linearGradient id="a" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#0f172a"/><stop offset=".6" stop-color="#115e59"/><stop offset="1" stop-color="#5eead4"/></linearGradient>${BL("b",14)}</defs><rect width="390" height="320" fill="url(#a)"/><circle cx="285" cy="110" r="34" fill="#ccfbf1" opacity=".85"/><path d="M0 230 L80 150 L150 215 L230 130 L310 220 L390 165 V320 H0Z" fill="#134e4a" opacity=".55"/><ellipse cx="200" cy="230" rx="260" ry="26" fill="#fff" opacity=".18" filter="url(#b)"/><path d="M0 262 L70 205 L140 255 L220 190 L300 258 L390 210 V320 H0Z" fill="#0f3d3a" opacity=".78"/><path d="M0 300 L90 255 L180 292 L270 250 L390 290 V320 H0Z" fill="#082a2b"/>`),
+ r=>svg(`<defs>${BL("b",34)}</defs><rect width="390" height="320" fill="#0b1020"/><g filter="url(#b)">${["#6366f1","#ec4899","#f59e0b","#14b8a6","#3b82f6"].map(c=>`<circle cx="${(r()*390).toFixed(0)}" cy="${(r()*320).toFixed(0)}" r="${(70+r()*50).toFixed(0)}" fill="${c}" opacity=".6"/>`).join("")}</g>${stars(r,20,320)}`)
+];
 
-        <h3>DAILY NON-NEGOTIABLES[span_8](start_span)[span_8](end_span)</h3>
-        <ul>
-            <li>Conditioning / recovery[span_9](start_span)[span_9](end_span)</li>
-            <li>PV study / portfolio[span_10](start_span)[span_10](end_span)</li>
-            <li>Cricket skill / match exposure[span_11](start_span)[span_11](end_span)</li>
-            <li>Sleep protected[span_12](start_span)[span_12](end_span)</li>
-        </ul>
-        <p class="highlight">"THEORIES STOP. EXECUTION BEGINS.[span_13](start_span)"[span_13](end_span)</p>
-        <p>The schedule is only valuable if you execute it repeatedly. Keep this open or save it to your phone. See it every morning.[span_14](start_span)[span_14](end_span)</p>
-        <small>PAGE 1/4[span_15](start_span)[span_15](end_span)</small>
-    </div>
+const fig=(x,y,s,c="#0a0d1c")=>`<g transform="translate(${x} ${y}) scale(${s})" fill="${c}" stroke="${c}" stroke-linecap="round" stroke-linejoin="round"><circle cx="0" cy="-93" r="7" stroke="none"/><path d="M-7 -97 L-5 -108 L0 -100 L3 -111 L7 -97Z" stroke="none"/><path d="M-4 -86 Q-24 -93 -40 -80 Q-24 -82 -7 -77Z" stroke="none" opacity=".9"/><path d="M-9 -85 L9 -85 L8 -48 L-8 -48Z" stroke="none"/><path d="M-8 -50 L-14 0 L-5 0 L0 -32 L6 0 L15 0 L8 -50Z" stroke="none"/><path d="M-7 -80 L13 -64 M8 -80 L14 -64" fill="none" stroke-width="5"/><path d="M14 -64 L36 -104" fill="none" stroke-width="5"/><path d="M33 -99 L40 -111" fill="none" stroke-width="10"/></g>`;
+const cloud=(x,y,s,f,o)=>`<g transform="translate(${x} ${y}) scale(${s})" fill="${f}" opacity="${o}"><ellipse cx="0" cy="0" rx="46" ry="13"/><ellipse cx="28" cy="-9" rx="30" ry="16"/><ellipse cx="-24" cy="-7" rx="26" ry="12"/><ellipse cx="6" cy="-14" rx="22" ry="14"/></g>`;
+const petals=(r,n,c)=>Array.from({length:n},()=>{const x=r()*390,y=r()*320,ro=r()*180;return `<ellipse cx="${x.toFixed(0)}" cy="${y.toFixed(0)}" rx="${(2+r()*2.2).toFixed(1)}" ry="${(1.2+r()*1.2).toFixed(1)}" transform="rotate(${ro.toFixed(0)} ${x.toFixed(0)} ${y.toFixed(0)})" fill="${c}" opacity="${(.5+r()*.5).toFixed(2)}"/>`}).join("");
+const skyline=(r,y,c)=>{let x=-5,o="";while(x<400){const w=12+r()*18,h=16+r()*50;o+=`<rect x="${x.toFixed(0)}" y="${(y-h).toFixed(0)}" width="${w.toFixed(0)}" height="${(h+40).toFixed(0)}" fill="${c}"/>`;x+=w+1+r()*3}return o};
+const wires=c=>`<g stroke="${c}" fill="none" stroke-width="1.4"><path d="M-20 98 Q20 120 60 92"/><path d="M60 92 Q180 128 300 92"/><path d="M60 104 Q180 140 300 104"/><path d="M300 92 Q350 120 410 98"/></g><g stroke="${c}" stroke-width="3"><path d="M60 86V205M46 94H74M46 104H74M300 86V205M286 94H314M286 104H314"/></g>`;
+WP.push(
+ r=>svg(`<defs><linearGradient id="a" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#1d4ed8"/><stop offset=".45" stop-color="#a78bfa"/><stop offset=".75" stop-color="#fb7185"/><stop offset="1" stop-color="#fdba74"/></linearGradient><radialGradient id="g" cx=".5" cy=".5" r=".5"><stop offset="0" stop-color="#fff7ed" stop-opacity=".95"/><stop offset="1" stop-color="#fdba74" stop-opacity="0"/></radialGradient></defs><rect width="390" height="320" fill="url(#a)"/><circle cx="290" cy="150" r="105" fill="url(#g)"/><circle cx="290" cy="150" r="24" fill="#fff7ed"/>${cloud(80,60,1.1,"#fff",.55)}${cloud(300,40,1.3,"#fde4ef",.6)}${cloud(190,105,1.5,"#fecdd3",.55)}${cloud(40,150,1.2,"#fff",.45)}${cloud(335,130,1.1,"#fff7ed",.5)}${skyline(r,200,"#2a1b4a")}<rect y="198" width="390" height="122" fill="#150f2e"/>${wires("#150f2e")}${fig(105,200,0.8)}${petals(r,16,"#ffd1dc")}`),
+ r=>svg(`<defs><linearGradient id="a" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#020617"/><stop offset=".6" stop-color="#1e1b4b"/><stop offset="1" stop-color="#4338ca"/></linearGradient><radialGradient id="g" cx=".5" cy=".5" r=".5"><stop offset="0" stop-color="#e0e7ff" stop-opacity=".7"/><stop offset="1" stop-color="#6366f1" stop-opacity="0"/></radialGradient></defs><rect width="390" height="320" fill="url(#a)"/>${stars(r,60,150)}<circle cx="262" cy="92" r="95" fill="url(#g)"/><circle cx="262" cy="92" r="46" fill="#f5f3ff"/><circle cx="248" cy="80" r="9" fill="#ddd6fe" opacity=".6"/><circle cx="276" cy="106" r="6" fill="#ddd6fe" opacity=".6"/><g stroke="#fff" stroke-linecap="round"><path d="M40 30L110 62" stroke-width="1.6" opacity=".8"/><path d="M120 12L170 34" stroke-width="1.2" opacity=".6"/><path d="M330 20L370 38" stroke-width="1.2" opacity=".6"/></g>${cloud(60,130,1.4,"#6d5fd6",.4)}${cloud(320,150,1.2,"#6d5fd6",.35)}${skyline(r,200,"#0b0b25")}<rect y="198" width="390" height="122" fill="#05060f"/>${fig(120,200,0.8,"#05060f")}${petals(r,18,"#fde68a")}`),
+ r=>{const cx=195,cy=135;let L="";for(let i=0;i<80;i++){const a=r()*6.2832,r1=60+r()*40,r2=340,w=1.5+r()*6,dx=Math.cos(a),dy=Math.sin(a),px=-dy,py=dx;const p=(d,o)=>`${(cx+dx*d+px*o).toFixed(1)},${(cy+dy*d+py*o).toFixed(1)}`;L+=`<polygon points="${p(r1,.5)} ${p(r1,-.5)} ${p(r2,-w)} ${p(r2,w)}" fill="#fff" opacity="${(.1+r()*.3).toFixed(2)}"/>`}
+  return svg(`<defs><radialGradient id="a" cx=".5" cy=".42" r=".75"><stop offset="0" stop-color="#fde047"/><stop offset=".3" stop-color="#f97316"/><stop offset=".65" stop-color="#be123c"/><stop offset="1" stop-color="#1e1b4b"/></radialGradient>${BL("b",14)}</defs><rect width="390" height="320" fill="url(#a)"/>${L}<g filter="url(#b)"><ellipse cx="195" cy="150" rx="62" ry="88" fill="#fde047" opacity=".85"/></g><rect y="200" width="390" height="120" fill="#0a0d1c"/>${fig(195,205,1.0)}`)},
+ r=>svg(`<defs><linearGradient id="a" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#7dd3fc"/><stop offset=".65" stop-color="#f9a8d4"/><stop offset="1" stop-color="#fef3c7"/></linearGradient></defs><rect width="390" height="320" fill="url(#a)"/>${cloud(260,50,1.3,"#fff",.7)}${cloud(80,120,1.4,"#fff",.55)}${cloud(330,140,1.1,"#fff",.5)}<path d="M0 190 L70 130 L140 180 L220 115 L300 175 L390 130 V210 H0Z" fill="#a5b4fc" opacity=".55"/><path d="M0 205 L90 160 L170 200 L260 150 L390 200 V215 H0Z" fill="#818cf8" opacity=".6"/><path d="M-10 36 Q80 20 170 70 M70 33 Q110 70 120 100 M120 52 Q160 38 200 30" stroke="#5b3a29" stroke-width="5" fill="none" stroke-linecap="round"/>${Array.from({length:70},()=>`<circle cx="${(r()*230).toFixed(0)}" cy="${(14+r()*95).toFixed(0)}" r="${(4+r()*6).toFixed(1)}" fill="${["#fbcfe8","#f9a8d4","#fda4af","#fff1f2"][Math.floor(r()*4)]}" opacity=".92"/>`).join("")}<rect y="198" width="390" height="122" fill="#4a2c4f"/>${fig(300,200,0.8,"#2a1636")}${petals(r,34,"#ffd1dc")}`)
+);
 
-    <!-- PAGE 2 -->
-    <div class="page" id="mon-fri">
-        <div class="nav">START | MON - FRI | SAT | SUN[span_16](start_span)[span_16](end_span)</div>
-        <h2>Mon - Fri: The Grind[span_17](start_span)[span_17](end_span)</h2>
-        <p>Build the career while building the athlete[span_18](start_span)[span_18](end_span)</p>
+const brute=(x,y,s,c="#07070c")=>`<g transform="translate(${x} ${y}) scale(${s})" fill="${c}" stroke="${c}" stroke-linecap="round" stroke-linejoin="round"><circle cx="0" cy="-104" r="8.5" stroke="none"/><path d="M-7 -98L7 -98L10 -90L-10 -90Z" stroke="none"/><path d="M-14 -92L14 -92L32 -84L30 -66L15 -44L-15 -44L-30 -66L-32 -84Z" stroke="none"/><path d="M-30 -82L-44 -62M30 -82L44 -62" fill="none" stroke-width="16"/><path d="M-44 -62L-26 -78M44 -62L26 -78" fill="none" stroke-width="12"/><circle cx="-24" cy="-79" r="9" stroke="none"/><circle cx="24" cy="-79" r="9" stroke="none"/><path d="M-9 -46L-28 -22L-33 0M9 -46L28 -22L33 0" fill="none" stroke-width="17"/><path d="M-40 0L-26 0M26 0L40 0" fill="none" stroke-width="8"/></g>`;
+WP.push(r=>{let L="";for(let i=0;i<70;i++){const a=r()*6.2832,r1=70+r()*40,r2=340,w=1.5+r()*6,dx=Math.cos(a),dy=Math.sin(a),px=-dy,py=dx,cx=195,cy=140;const p=(d,o)=>`${(cx+dx*d+px*o).toFixed(1)},${(cy+dy*d+py*o).toFixed(1)}`;L+=`<polygon points="${p(r1,.5)} ${p(r1,-.5)} ${p(r2,-w)} ${p(r2,w)}" fill="${r()<.35?"#fecaca":"#ef4444"}" opacity="${(.1+r()*.28).toFixed(2)}"/>`}
+ return svg(`<defs><radialGradient id="a" cx=".5" cy=".45" r=".8"><stop offset="0" stop-color="#991b1b"/><stop offset=".5" stop-color="#2a0a10"/><stop offset="1" stop-color="#050507"/></radialGradient>${BL("b",16)}</defs><rect width="390" height="320" fill="url(#a)"/>${L}<g filter="url(#b)"><ellipse cx="195" cy="150" rx="78" ry="98" fill="#ef4444" opacity=".7"/></g><rect y="205" width="390" height="115" fill="#07070c"/>${brute(195,205,1.12)}${petals(r,22,"#fca5a5")}`)});
+const ANIME=[8,9,10,11,12];
+let animeOnly=store.get("animeOnly",false);
+const pool=()=>animeOnly?ANIME:WP.map((_,i)=>i);
+let wpI=pool()[Math.floor(Math.random()*pool().length)],qI=Math.floor(Math.random()*Q.length),wpSeed=Math.floor(Math.random()*1e9);
 
-        <div class="time-block"><span class="time">5:45 AM - 6:30 AM:</span> Conditioning. 45 min. Sprints, core, and leg strength. Done before the commute drains you.[span_19](start_span)[span_19](end_span)</div>
-        <div class="time-block"><span class="time">6:30 AM - 7:15 AM:</span> Prep & Exit. Shower, high-protein breakfast, grab bag. Leave without delay.[span_20](start_span)[span_20](end_span)</div>
-        <div class="time-block"><span class="time">7:15 AM - 6:30 PM:</span> Commute & College. THE HACK: Use the 2-hour commute to read ICH guidelines and MedDRA terms. Do college assignments during campus breaks.[span_21](start_span)[span_21](end_span)</div>
-        <div class="time-block"><span class="time">6:30 PM - 7:00 PM:</span> Return & Refuel. Quick snack. Change clothes immediately. No sitting on the couch.[span_22](start_span)[span_22](end_span)</div>
-        <div class="time-block"><span class="time">7:00 PM - 8:30 PM:</span> Elite Cricket Nets. Pure skill work: pace, accuracy, timing, and power hitting.[span_23](start_span)[span_23](end_span)</div>
-        <div class="time-block"><span class="time">8:30 PM - 9:30 PM:</span> PV Laptop Work. Uninterrupted deep work: Argus tutorials, mock case narratives, or PV certification coursework.[span_24](start_span)[span_24](end_span)</div>
-        <div class="time-block"><span class="time">9:30 PM - 10:30 PM:</span> Free Life + Dinner. Decompress. AI animation, family/girlfriend time, and dinner.[span_25](start_span)[span_25](end_span)</div>
-        <div class="time-block"><span class="time">10:30 PM - 5:45 AM:</span> Sleep 7h 15m. Mandatory physical shutdown. Protect recovery.[span_26](start_span)[span_26](end_span)</div>
+let CUSTOM=store.get("customWps",[]);
+const POS={top:"center top",center:"center center",bottom:"center bottom"},SHADE=[[.15,.42],[.3,.68],[.45,.85]];
+const saveCustoms=()=>{try{localStorage.setItem("customWps",JSON.stringify(CUSTOM));return true}catch(e){return false}};
+function wpInner(){if(SET.useMine&&CUSTOM.length){const u=CUSTOM[Math.min(SET.pick,CUSTOM.length-1)];return `<div class="wpimg" style="background-image:url('${u}');background-position:${POS[SET.pos]||POS.center}"></div>`}return WP[wpI](rng(wpSeed))}
+function addPhoto(inp){const files=[...inp.files].slice(0,6-CUSTOM.length);inp.value="";
+ files.forEach(f=>{const r=new FileReader();r.onload=()=>{const im=new Image();im.onload=()=>{const M=1280,sc=Math.min(1,M/Math.max(im.width,im.height)),c=document.createElement("canvas");c.width=Math.round(im.width*sc);c.height=Math.round(im.height*sc);c.getContext("2d").drawImage(im,0,0,c.width,c.height);
+  CUSTOM.push(c.toDataURL("image/jpeg",.82));if(!saveCustoms()){CUSTOM.pop();alert("Not enough storage for that photo. Remove one and try again.");return}
+  SET.pick=CUSTOM.length-1;SET.useMine=true;saveSet();render();refreshSheet()};im.src=r.result};r.readAsDataURL(f)})}
+function pickWp(i){SET.pick=i;SET.useMine=true;saveSet();render();refreshSheet()}
+function toggleMine(){if(!CUSTOM.length){document.getElementById("wpfile").click();return}SET.useMine=!SET.useMine;saveSet();render();refreshSheet()}
+function delWp(i){CUSTOM.splice(i,1);saveCustoms();if(SET.pick>=CUSTOM.length)SET.pick=Math.max(0,CUSTOM.length-1);if(!CUSTOM.length)SET.useMine=false;saveSet();render();refreshSheet()}
+function setSeg(k,v){SET[k]=v;saveSet();render();refreshSheet()}
+function toggleAnime(){SET.useMine=false;saveSet();animeOnly=!animeOnly;store.set("animeOnly",animeOnly);const pl=pool();wpI=pl[Math.floor(Math.random()*pl.length)];wpSeed=Math.floor(Math.random()*1e9);render()}
+function shuffleWp(){if(SET.useMine&&CUSTOM.length>1){SET.pick=(SET.pick+1)%CUSTOM.length;saveSet();qI=(qI+1+Math.floor(Math.random()*(Q.length-1)))%Q.length;render();return}SET.useMine=false;saveSet();const pl=pool().filter(i=>i!=wpI);wpI=pl[Math.floor(Math.random()*pl.length)];qI=(qI+1+Math.floor(Math.random()*(Q.length-1)))%Q.length;wpSeed=Math.floor(Math.random()*1e9);render()}
+const taskIds=k=>S[k].map((b,i)=>i).filter(i=>!S[k][i][2].startsWith("Sleep"));
+function dayProg(k){const st=store.get("tb:"+dkey(new Date()),{}),ids=taskIds(k),done=ids.filter(i=>st[i]).length;return{done,total:ids.length,pct:ids.length?Math.round(done/ids.length*100):0}}
+function tb(i){const key="tb:"+dkey(new Date()),st=store.get(key,{});st[i]=!st[i];store.set(key,st);render()}
+function progCard(k){const p=dayProg(k),C=213.63,msg=p.pct==100?"Day complete. Well done.":p.pct>=50?"More than halfway. Keep going.":p.pct>0?"Good start. Keep the blocks coming.":"Tick tasks as you finish them.";
+ return `<div class="prog"><svg class="ring" viewBox="0 0 80 80"><circle class="rbg" cx="40" cy="40" r="34"/><circle class="rfg" cx="40" cy="40" r="34" transform="rotate(-90 40 40)" style="stroke-dasharray:${(C*p.pct/100).toFixed(1)} ${C}"/><text x="40" y="46" text-anchor="middle">${p.pct}%</text></svg><div><b>Day progress</b><span>${p.done} of ${p.total} tasks completed</span><small>${msg}</small></div></div>`}
+function miniProg(k){const p=dayProg(k);return `<div class="mini"><div class="b2"><i style="width:${p.pct}%"></i></div><span>${p.pct}% · ${p.done}/${p.total} tasks</span></div>`}
+const nnDone=k=>{const st=store.get("nn:"+k,{});return NN.filter((_,i)=>st[i]).length};
+function streak(){let n=0;const d=new Date();if(nnDone(dkey(d))<NN.length)d.setDate(d.getDate()-1);
+ for(let i=0;i<365;i++){if(nnDone(dkey(d))==NN.length){n++;d.setDate(d.getDate()-1)}else break}return n}
+function weekStrip(){const mon=new Date(monday()+"T00:00:00"),td=dkey(new Date());
+ return `<div class="week">`+[0,1,2,3,4,5,6].map(i=>{const x=new Date(mon);x.setDate(mon.getDate()+i);const k=dkey(x),c=nnDone(k);
+ return `<div class="wd ${c==NN.length?"full":c>0?"part":""} ${k==td?"today":""}"><i></i>${"MTWTFSS"[i]}</div>`}).join("")+`</div>`}
+function homeView(d,tk){const hr=d.getHours(),g=hr<12?"Good morning":hr<17?"Good afternoon":"Good evening";
+ return `<div class="wp" style="--st:${SHADE[SET.shade??1][0]};--sb:${SHADE[SET.shade??1][1]}"><div class="wpsvg">${wpInner()}</div><div class="wpshade"></div><div class="wptop"><span>${g}, Vidhan</span><div style="display:flex;gap:8px;align-items:center"><button class="chip ${animeOnly?"on":""}" onclick="toggleAnime()">Anime</button><button class="shuf" onclick="shuffleWp()" aria-label="new wallpaper">↻</button></div></div>${SET.quote!==false?`<div class="wpq">“${Q[qI]}”</div>`:""}<div class="wpd">${d.toLocaleDateString(undefined,{weekday:"long",day:"numeric",month:"long"}).toUpperCase()}</div></div>`+
+ progCard(tk)+hero(tk)+
+ `<div class="stat"><div><b>${nnDone(dkey(d))}/${NN.length}</b><span>Today's check-ins</span></div><div><b>${streak()}</b><span>Day streak</span></div></div>`+
+ `<div class="sec">THIS WEEK · ${agg(weekDays(0)).pct}% OF TASKS</div>`+weekStrip()+
+ `<div class="sec">DAILY CHECK-IN</div>`+checks(NN,"nn:"+dkey(d))+
+ `<div class="sec">QUICK ACCESS</div><div class="tiles">
+ <button class="tile" style="--c:var(--train)" onclick="go('work')"><b>Workout</b><span>5:45 AM · 45 min</span></button>
+ <button class="tile" style="--c:var(--pv)" onclick="plan='mf';go('plan')"><b>Week plan</b><span>Mon – Fri</span></button>
+ <button class="tile" style="--c:var(--cricket)" onclick="plan='sat';go('plan')"><b>Saturday</b><span>Match day + scorecard</span></button>
+ <button class="tile" style="--c:var(--college)" onclick="plan='sun';go('plan')"><b>Sunday</b><span>Setup + checklist</span></button>
+ <button class="tile" style="--c:var(--gold)" onclick="go('progress')"><b>Progress</b><span>Weekly &amp; monthly</span></button>
+ <button class="tile" style="--c:var(--rest)" onclick="go('mission')"><b>Mission</b><span>Your goals</span></button></div>`}
+const exKey=()=>"wx:"+dkey(new Date());
+function wx(p,i){const k=exKey(),st=store.get(k,{});st[p+"-"+i]=!st[p+"-"+i];store.set(k,st);render()}
+function workView(){const now=new Date(),nm=now.getHours()*60+now.getMinutes(),st=store.get(exKey(),{}),wkd=todayKey()=="mf";let tot=0,done=0;
+ W.forEach((p,pi)=>p[4].forEach((_,i)=>{tot++;if(st[pi+"-"+i])done++}));const pct=Math.round(done/tot*100);
+ return `<h1>Morning Conditioning</h1><div class="sub">Mon – Fri · 5:45 AM – 6:30 AM · 45 min · home workout</div><div class="mini"><div class="b2"><i style="width:${pct}%"></i></div><span>${done}/${tot} exercises</span></div><div class="card" style="--c:var(--train)"><div class="d" style="color:var(--ink)">Strict, high-intensity. Builds raw strength, stamina and explosive power for tennis cricket.</div><div class="warn">No cricket bat during this block.</div></div>`+
+ W.map((p,pi)=>{const cur=wkd&&nm>=m(p[0])&&nm<m(p[1]);return `<div class="card ${cur?"now":""}" style="--c:var(--train)"><div class="t">${f12(p[0])} – ${f12(p[1])}</div><div class="n">${p[2]}</div><div class="d" style="margin-bottom:6px">${p[3]}</div>${p[4].map((x,i)=>`<button class="ex ${st[pi+"-"+i]?"on":""}" onclick="wx(${pi},${i})"><i class="bx"></i><span>${x}</span></button>`).join("")}${cur?'<span class="badge">NOW</span>':""}</div>`}).join("")}
+function render(){
+ const d=new Date();document.getElementById("clock").textContent=d.toLocaleDateString(undefined,{weekday:"short"})+" "+f12(pad(d.getHours())+":"+pad(d.getMinutes()));
+ document.querySelector(".gear").classList.toggle("on",!!SET.on);document.getElementById("bnav").innerHTML=TABS.map(([k,l])=>`<button class="${k==tab?"on":""}" onclick="go('${k}')">${ICON[k]}${l}</button>`).join("");
+ const tk=todayKey();let h="";
+ if(tab=="home")h=homeView(d,tk);
+ else if(tab=="work")h=workView();
+ else if(tab=="progress")h=progressView();
+ else if(tab=="today"){const nm={mf:"Weekday",sat:"Saturday",sun:"Sunday"}[tk];
+  h=`<h1>${d.toLocaleDateString(undefined,{weekday:"long"})}</h1><div class="sub">${HEAD[tk][1]}</div>`+miniProg(tk)+hero(tk)+
+  `<div class="sec">DAILY NON-NEGOTIABLES</div>`+checks(NN,"nn:"+dkey(d))+`<div class="sec">TODAY'S SCHEDULE</div>`+schedule(tk,true)+dayExtras(tk);}
+ else if(tab=="mission"){
+  h=`<h1>Dual-Track</h1><div class="sub">B.Pharm to Pharmacovigilance · Tennis Cricket to Elite Performance</div>
+  <div class="sec">MISSION EXECUTION STANDARD</div>
+  <div class="card" style="--c:var(--college)"><div class="n">Complete B.Pharm</div><div class="d">Pass the degree without sacrificing career preparation.</div></div>
+  <div class="card" style="--c:var(--pv)"><div class="n">Secure remote PV work</div><div class="d">Build practical PV knowledge, a portfolio, and a job-ready CV.</div></div>
+  <div class="card" style="--c:var(--cricket)"><div class="n">Train for elite tennis cricket</div><div class="d">Train consistently, compete under pressure, and measure performance.</div></div>
+  <div class="quote">“THEORIES STOP. EXECUTION BEGINS.”<small>The schedule is only valuable if you execute it repeatedly.</small></div>`;}
+ else{h=`<div class="pills">`+[["mf","MON–FRI"],["sat","SAT"],["sun","SUN"]].map(([k,l])=>`<button class="${k==plan?"on":""}" onclick="plan='${k}';render()">${l}</button>`).join("")+`</div><h1>${HEAD[plan][0]}</h1><div class="sub">${HEAD[plan][1]}</div>`+schedule(plan,plan==tk)+dayExtras(plan);}
+ document.getElementById("main").innerHTML=h;}
 
-        <h3>TRACKS[span_27](start_span)[span_27](end_span)</h3>
-        <ul>
-            <li><strong>TRACK A (PV):</strong> B.Pharm > ICH / MedDRA > case-processing skills > portfolio > applications[span_28](start_span)[span_28](end_span)</li>
-            <li><strong>TRACK B (CRICKET):</strong> Conditioning > nets > competition > measurable performance[span_29](start_span)[span_29](end_span)</li>
-        </ul>
-        <small>PAGE 2/4[span_30](start_span)[span_30](end_span)</small>
-    </div>
+// ===== Alerts & settings =====
+const SET0={on:false,lead:0,vib:true,snd:false,useMine:false,pick:0,shade:1,quote:true,pos:"center",cat:{train:true,cricket:true,pv:true,college:true,rest:false}};
+let SET=Object.assign({},SET0,store.get("settings",{}));SET.cat=Object.assign({},SET0.cat,SET.cat||{});
+const saveSet=()=>store.set("settings",SET);
+const NATIVE=typeof AndroidBridge!=="undefined";
+const permState=()=>NATIVE?(AndroidBridge.hasNotifPermission()?"granted":"default"):("Notification" in window?Notification.permission:"unsupported");
+function buildAlerts(){const out=[];let id=1;const DAYS={mf:[2,3,4,5,6],sat:[7],sun:[1]};
+ Object.keys(DAYS).forEach(k=>S[k].forEach(b=>{const cat=(b[4]=="free"||b[4]=="rest")?"rest":b[4];if(!SET.cat[cat])return;
+  let mins=m(b[0])-SET.lead,days=DAYS[k].slice();if(mins<0){mins+=1440;days=days.map(d=>d==1?7:d-1)}
+  out.push({id:id++,d:days,h:Math.floor(mins/60),m:mins%60,t:f12(b[0])+" · "+b[2],b:(SET.lead?"Starts in "+SET.lead+" min. ":"Starting now. ")+b[3]})}));
+ return out}
+function syncNative(){if(!NATIVE)return;try{AndroidBridge.setStyle(!!SET.vib,!!SET.snd);if(SET.on)AndroidBridge.setAlerts(JSON.stringify(buildAlerts()));else AndroidBridge.cancelAlerts()}catch(e){}}
+const vibPattern=()=>Array.from({length:20},()=>[700,300]).flat();
+function setOpt(k){SET[k]=!SET[k];saveSet();syncNative();refreshSheet()}
+function webNotify(a){if(!("Notification" in window)||Notification.permission!=="granted")return;
+ const o={body:a.b,icon:"icon-192.png",tag:"dt-"+a.id,vibrate:[700,300,700,300,700,300,700]};
+ const fb=()=>{try{new Notification(a.t,o)}catch(e){}};
+ if(navigator.serviceWorker&&navigator.serviceWorker.getRegistration)navigator.serviceWorker.getRegistration().then(r=>r?r.showNotification(a.t,o):fb()).catch(fb);else fb()}
+function toast(a){const el=document.getElementById("toast");el.innerHTML="<b>"+a.t+"</b><span>"+a.b+"</span><button onclick=\"go('today');hideToast()\">Open</button><button onclick=\"hideToast()\">Dismiss</button>";
+ el.classList.add("show");if(!NATIVE&&SET.vib!==false){try{navigator.vibrate&&navigator.vibrate(vibPattern())}catch(e){}}clearTimeout(window._tt);window._tt=setTimeout(hideToast,15000)}
+function hideToast(){document.getElementById("toast").classList.remove("show");try{if(NATIVE)AndroidBridge.stopAlarm();else navigator.vibrate&&navigator.vibrate(0)}catch(e){}}
+function fireAlert(a){toast(a);if(!NATIVE)webNotify(a)}
+function tickAlerts(){if(!SET.on)return;const now=new Date(),dow=now.getDay()+1,nm=now.getHours()*60+now.getMinutes(),fk="fired:"+dkey(now),fired=store.get(fk,{});
+ buildAlerts().forEach(a=>{if(!a.d.includes(dow))return;const am=a.h*60+a.m;if(nm>=am&&nm-am<=2&&!fired[a.id]){fired[a.id]=1;store.set(fk,fired);fireAlert(a)}})}
+async function toggleNotif(){
+ if(SET.on){SET.on=false;saveSet();syncNative();render();refreshSheet();return}
+ if(NATIVE){if(!AndroidBridge.hasNotifPermission())AndroidBridge.requestNotifPermission()}
+ else if("Notification" in window&&Notification.permission==="default"){try{await Notification.requestPermission()}catch(e){}}
+ SET.on=true;saveSet();syncNative();render();refreshSheet()}
+function setLead(v){SET.lead=v;saveSet();syncNative();refreshSheet()}
+function setCat(k){SET.cat[k]=!SET.cat[k];saveSet();syncNative();refreshSheet()}
+async function testAlert(){const a={id:0,t:"Test alert · Dual-Track",b:"Reminders are working. Time to execute."};
+ if(!NATIVE&&"Notification" in window&&Notification.permission==="default"){try{await Notification.requestPermission()}catch(e){}}
+ toast(a);if(NATIVE){try{AndroidBridge.testAlert()}catch(e){}}else webNotify(a);refreshSheet()}
 
-    <!-- PAGE 3 -->
-    <div class="page" id="sat">
-        <div class="nav">START | MON - FRI | SAT | SUN[span_31](start_span)[span_31](end_span)</div>
-        <h2>Saturday[span_32](start_span)[span_32](end_span)</h2>
-        <p>The Reality Check: test the skills under pressure[span_33](start_span)[span_33](end_span)</p>
+function icsEsc(s){return String(s).replace(/\\/g,"\\\\").replace(/;/g,"\\;").replace(/,/g,"\\,").replace(/\n/g,"\\n")}
+function icsFold(l){let o="";while(l.length>73){o+=l.slice(0,73)+"\r\n ";l=l.slice(73)}return o+l}
+function makeICS(){const G=[["mf",[1,2,3,4,5],"MO,TU,WE,TH,FR"],["sat",[6],"SA"],["sun",[0],"SU"]];
+ const ds=d=>d.getFullYear()+pad(d.getMonth()+1)+pad(d.getDate());
+ const ts=(d,mins)=>ds(d)+"T"+pad(Math.floor(mins/60))+pad(mins%60)+"00";
+ const L=["BEGIN:VCALENDAR","VERSION:2.0","PRODID:-//Dual-Track//EN","CALSCALE:GREGORIAN"];let n=0;
+ G.forEach(([k,dows,by])=>{const d0=new Date();while(!dows.includes(d0.getDay()))d0.setDate(d0.getDate()+1);
+  S[k].forEach(b=>{const cat=(b[4]=="free"||b[4]=="rest")?"rest":b[4];if(!SET.cat[cat])return;
+   const s=m(b[0]),e=m(b[1]),d1=new Date(d0);if(e<=s)d1.setDate(d1.getDate()+1);
+   L.push("BEGIN:VEVENT","UID:dt-"+(++n)+"@dualtrack","DTSTAMP:"+ds(new Date())+"T000000Z","DTSTART:"+ts(d0,s),"DTEND:"+ts(d1,e),
+    "RRULE:FREQ=WEEKLY;BYDAY="+by,"SUMMARY:"+icsEsc(b[2]),"DESCRIPTION:"+icsEsc(b[3]),
+    "BEGIN:VALARM","ACTION:DISPLAY","DESCRIPTION:"+icsEsc(b[2]),"TRIGGER:-PT"+SET.lead+"M","END:VALARM","END:VEVENT")})});
+ L.push("END:VCALENDAR");return L.map(icsFold).join("\r\n")+"\r\n"}
+function dlICS(){const b=new Blob([makeICS()],{type:"text/calendar"}),a=document.createElement("a");a.href=URL.createObjectURL(b);a.download="Dual-Track-Reminders.ics";document.body.appendChild(a);a.click();a.remove()}
+function renderSheet(){const ps=permState();
+ const status=NATIVE?(ps=="granted"?"Allowed on this phone":"Allow notifications when asked"):ps=="granted"?"Allowed":ps=="denied"?"Blocked in browser settings (in-app alerts still work)":ps=="unsupported"?"Not supported here (in-app alerts only)":"Not asked yet";
+ const cats=[["train","Workout","var(--train)"],["cricket","Cricket nets & matches","var(--cricket)"],["pv","PV study & portfolio","var(--pv)"],["college","College & assignments","var(--college)"],["rest","Free time, wind-down & sleep","var(--rest)"]];
+ return `<div class="sheet-bg" onclick="closeSettings()"></div><div class="sheet"><div class="grab"></div><div class="sh-h"><b>Settings</b><button class="x" onclick="closeSettings()">Done</button></div>
+ <div class="sec">HOME WALLPAPER</div>
+ <div class="thumbs">${CUSTOM.map((u,i)=>`<div class="th ${SET.useMine&&SET.pick==i?"on":""}" style="background-image:url('${u}')" onclick="pickWp(${i})"><button class="rm" onclick="event.stopPropagation();delWp(${i})" aria-label="remove">✕</button></div>`).join("")}${CUSTOM.length<6?`<button class="th add" onclick="document.getElementById('wpfile').click()">+<small>Add photo</small></button>`:""}</div>
+ <div class="row"><div>Use my photo on Home<small>${CUSTOM.length?"Tap a photo above to choose it (↻ on Home cycles them)":"Add your own picture, e.g. your favourite art"}</small></div><button class="sw ${SET.useMine?"on":""}" onclick="toggleMine()" aria-label="use my photo"><i></i></button></div>
+ <div class="seg" style="margin-bottom:8px">${[["top","Focus top"],["center","Focus center"],["bottom","Focus bottom"]].map(([v,l])=>`<button class="${SET.pos==v?"on":""}" onclick="setSeg('pos','${v}')">${l}</button>`).join("")}</div>
+ <div class="seg" style="margin-bottom:8px">${[[0,"Light shade"],[1,"Medium shade"],[2,"Strong shade"]].map(([v,l])=>`<button class="${(SET.shade??1)==v?"on":""}" onclick="setSeg('shade',${v})">${l}</button>`).join("")}</div>
+ <div class="row"><div>Show quote on wallpaper</div><button class="sw ${SET.quote!==false?"on":""}" onclick="setSeg('quote',${SET.quote===false})" aria-label="show quote"><i></i></button></div>
+ <div class="sec">ALERTS</div><div class="row"><div><b>Task reminders</b><small>${status}</small></div><button class="sw ${SET.on?"on":""}" onclick="toggleNotif()" aria-label="toggle reminders"><i></i></button></div>
+ <div class="sec">ALERT STYLE</div><div class="row"><div>Strong vibration<small>Buzzes about 20 seconds like an alarm until you tap Done</small></div><button class="sw ${SET.vib?"on":""}" onclick="setOpt('vib')" aria-label="strong vibration"><i></i></button></div>${NATIVE?`<div class="row"><div>Alarm sound<small>Plays your alarm tone until you dismiss it</small></div><button class="sw ${SET.snd?"on":""}" onclick="setOpt('snd')" aria-label="alarm sound"><i></i></button></div>`:""}<div class="sec">WHEN</div><div class="seg">${[[0,"At start"],[5,"5 min before"],[10,"10 min before"]].map(([v,l])=>`<button class="${SET.lead==v?"on":""}" onclick="setLead(${v})">${l}</button>`).join("")}</div>
+ <div class="sec">REMIND ME ABOUT</div>${cats.map(([k,l,c])=>`<div class="row"><div><b style="color:${c}">●</b> ${l}</div><button class="sw ${SET.cat[k]?"on":""}" onclick="setCat('${k}')" aria-label="${l}"><i></i></button></div>`).join("")}
+ ${NATIVE?"":`<div class="sec">WORKS WHEN APP IS CLOSED</div><button class="big" onclick="dlICS()">Add reminders to phone calendar (.ics)</button><p class="fine">Opens your calendar app, then tap Add / Import. Your phone's calendar fires the alarms even when this app is closed. Uses the timing and categories chosen above. After changing them, delete the old events and import again.</p>`}<div class="sec">TEST</div><button class="big" onclick="testAlert()">Send test alert</button>${NATIVE&&!AndroidBridge.canExact()?`<button class="big" onclick="AndroidBridge.openExactSettings()">Allow exact alarm timing</button>`:""}
+ <p class="fine">${NATIVE?"Reminders are scheduled on your phone, so they arrive even when the app is closed. Each one buzzes like an alarm until you tap Done or Snooze.":"In-app alerts show while this app is open or running in the background. A fully closed web app can't be woken on a schedule, so use the calendar option above, or the Android app build."}</p></div>`}
+function openSettings(){const s=document.getElementById("sheet");s.innerHTML=renderSheet();s.className="show"}
+function closeSettings(){const s=document.getElementById("sheet");s.className="";s.innerHTML=""}
+function refreshSheet(){const s=document.getElementById("sheet");if(s&&s.className=="show")s.innerHTML=renderSheet()}
+window.dtPerm=()=>{syncNative();render();refreshSheet()};
 
-        <div class="time-block"><span class="time">6:30 AM - 7:30 AM:</span> Wake & Prep. Extra sleep. Solid breakfast. Prepare for competition.[span_34](start_span)[span_34](end_span)</div>
-        <div class="time-block"><span class="time">8:00 AM - 12:00 PM:</span> Match Day / Trials. Play a competitive local match or attend a trial. Test yourself against strong players, not only friends.[span_35](start_span)[span_35](end_span)</div>
-        <div class="time-block"><span class="time">12:00 PM - 2:00 PM:</span> Recovery + Lunch. Hydrate, eat, and physically rest.[span_36](start_span)[span_36](end_span)</div>
-        <div class="time-block"><span class="time">2:00 PM - 4:30 PM:</span> Deep PV Study. 2.5 hours of focused work: complex mock cases and clinical-data study.[span_37](start_span)[span_37](end_span)</div>
-        <div class="time-block"><span class="time">4:30 PM - 6:00 PM:</span> College Overflow. Finish remaining B.Pharm assignments or study for upcoming exams.[span_38](start_span)[span_38](end_span)</div>
-        <div class="time-block"><span class="time">6:00 PM onwards:</span> Total Disconnect. Go out, spend time with loved ones, make lo-fi music, or work on AI webcomics. The night is yours.[span_39](start_span)[span_39](end_span)</div>
+// ===== Progress (weekly / monthly) =====
+const FIRST=(()=>{let v=store.get("firstUse",null);const td=dkey(new Date());if(!v)v=td;
+ try{for(let i=0;i<localStorage.length;i++){const k=localStorage.key(i);if(/^(tb|nn|wx):\d{4}-\d{2}-\d{2}$/.test(k)){const d=k.slice(3);if(d<v)v=d}}}catch(e){}
+ store.set("firstUse",v);return v})();
+let pvMode="week",wOff=0,mOff=0;
+const dowKey=d=>{const g=d.getDay();return g==6?"sat":g==0?"sun":"mf"};
+function dayStats(d){const ids=taskIds(dowKey(d)),st=store.get("tb:"+dkey(d),{}),done=ids.filter(i=>st[i]).length;return{done,total:ids.length,pct:ids.length?Math.round(done/ids.length*100):0}}
+const exCount=d=>Object.values(store.get("wx:"+dkey(d),{})).filter(Boolean).length;
+const inRange=d=>{const k=dkey(d);return k>=FIRST&&k<=dkey(new Date())};
+function agg(dates){let done=0,total=0,perfect=0,active=0,nn=0,ex=0,days=0,best=null;
+ dates.forEach(d=>{if(!inRange(d))return;const s=dayStats(d);days++;done+=s.done;total+=s.total;if(s.pct==100)perfect++;if(s.done>0)active++;nn+=nnDone(dkey(d));ex+=exCount(d);if(!best||s.pct>best.pct)best={d,pct:s.pct}});
+ return{done,total,pct:total?Math.round(done/total*100):0,perfect,active,nn,ex,days,best}}
+const heatCol=p=>p>=100?"var(--train)":p>=70?"#4ade80":p>=40?"#eab308":p>0?"var(--cricket)":"transparent";
+const heatTxt=p=>(p>=100||p<40)?"#fff":"#0b1120";
+const fmt=(d,o)=>d.toLocaleDateString(undefined,o);
+function weekDays(off){const mon=new Date();mon.setHours(0,0,0,0);mon.setDate(mon.getDate()-((mon.getDay()+6)%7)+off*7);return[0,1,2,3,4,5,6].map(i=>{const x=new Date(mon);x.setDate(mon.getDate()+i);return x})}
+function ringHTML(pct,title,l1,l2){const C=213.63;return `<div class="prog"><svg class="ring" viewBox="0 0 80 80"><circle class="rbg" cx="40" cy="40" r="34"/><circle class="rfg" cx="40" cy="40" r="34" transform="rotate(-90 40 40)" style="stroke-dasharray:${(C*pct/100).toFixed(1)} ${C}"/><text x="40" y="46" text-anchor="middle">${pct}%</text></svg><div><b>${title}</b><span>${l1}</span><small>${l2}</small></div></div>`}
+const statRow=(a,b)=>`<div class="stat"><div><b>${a[0]}</b><span>${a[1]}</span></div><div><b>${b[0]}</b><span>${b[1]}</span></div></div>`;
+const setPv=v=>{pvMode=v;render()};
+const shiftW=d=>{wOff=Math.min(0,wOff+d);render()};
+const shiftM=d=>{mOff=Math.min(0,mOff+d);render()};
+function progressView(){const td=dkey(new Date());
+ let h=`<h1>Progress</h1><div class="sub">Tracking since ${fmt(new Date(FIRST+"T00:00:00"),{day:"numeric",month:"short"})}</div><div class="pills"><button class="${pvMode=="week"?"on":""}" onclick="setPv('week')">WEEK</button><button class="${pvMode=="month"?"on":""}" onclick="setPv('month')">MONTH</button></div>`;
+ if(pvMode=="week"){const days=weekDays(wOff),a=agg(days);
+  h+=`<div class="pnav"><button onclick="shiftW(-1)">‹</button><b>${wOff==0?"This week":wOff==-1?"Last week":"Week"} · ${fmt(days[0],{month:"short",day:"numeric"})} – ${fmt(days[6],{month:"short",day:"numeric"})}</b><button ${wOff==0?"disabled":""} onclick="shiftW(1)">›</button></div>`+
+  ringHTML(a.pct,"Weekly progress",`${a.done} of ${a.total} tasks completed`,a.days?`${a.days} day${a.days>1?"s":""} tracked`+(a.best?` · best ${fmt(a.best.d,{weekday:"short"})} ${a.best.pct}%`:""):"No tracked days yet")+
+  `<div class="sec">DAILY BREAKDOWN</div><div class="bars">`+days.map((d,i)=>{const k=dkey(d),ok=inRange(d),s=dayStats(d);
+   return `<div class="bc ${k==td?"today":""} ${k>td?"fut":""}"><span>${ok?s.pct+"%":"–"}</span><div class="bt"><div class="bf" style="height:${ok?s.pct:0}%;--h:${heatCol(s.pct)}"></div></div><i>${"MTWTFSS"[i]}</i><em>${d.getDate()}</em></div>`}).join("")+`</div>`+
+  `<div class="sec">THIS WEEK IN NUMBERS</div>`+statRow([a.perfect,"Perfect days"],[a.active,"Active days"])+statRow([a.nn+"/"+(a.days*NN.length),"Daily check-ins"],[a.ex,"Workout exercises ticked"]);}
+ else{const now=new Date(),f=new Date(now.getFullYear(),now.getMonth()+mOff,1),n=new Date(f.getFullYear(),f.getMonth()+1,0).getDate(),
+  days=Array.from({length:n},(_,i)=>new Date(f.getFullYear(),f.getMonth(),i+1)),a=agg(days),lead=(f.getDay()+6)%7;
+  h+=`<div class="pnav"><button onclick="shiftM(-1)">‹</button><b>${fmt(f,{month:"long",year:"numeric"})}</b><button ${mOff==0?"disabled":""} onclick="shiftM(1)">›</button></div>`+
+  ringHTML(a.pct,"Monthly progress",`${a.done} of ${a.total} tasks completed`,a.days?`${a.days} day${a.days>1?"s":""} tracked`:"No tracked days yet")+
+  `<div class="sec">CALENDAR</div><div class="cal">`+"MTWTFSS".split("").map(x=>`<div class="dow">${x}</div>`).join("")+Array(lead).fill("<div></div>").join("")+
+  days.map(d=>{const k=dkey(d),ok=inRange(d),s=dayStats(d),has=ok&&s.pct>0;return `<div class="mc ${has?"h":""} ${k==td?"today":""} ${k>td?"fut":""}" style="--h:${heatCol(s.pct)};--t:${heatTxt(s.pct)}"><b>${d.getDate()}</b>${has?`<small>${s.pct}%</small>`:""}</div>`}).join("")+`</div>`+
+  `<div class="leg"><span style="--h:var(--cricket)"></span>1–39%<span style="--h:#eab308"></span>40–69%<span style="--h:#4ade80"></span>70–99%<span style="--h:var(--train)"></span>100%</div>`+
+  `<div class="sec">THIS MONTH IN NUMBERS</div>`+statRow([a.perfect,"Perfect days"],[a.active,"Active days"])+statRow([a.nn+"/"+(a.days*NN.length),"Daily check-ins"],[a.ex,"Workout exercises ticked"]);}
+ return h}
+function go(k){tab=k;render();scrollTo(0,0)}
+render();setInterval(()=>{if(!document.activeElement||document.activeElement.tagName!="INPUT")render()},30000);
+document.addEventListener("visibilitychange",()=>{if(!document.hidden){render();tickAlerts();syncNative();refreshSheet()}});
+setInterval(tickAlerts,15000);tickAlerts();syncNative();
 
-        <h3>SATURDAY SCORECARD[span_40](start_span)[span_40](end_span)</h3>
-        <ul>
-            <li>Competitive match / trial attended[span_41](start_span)[span_41](end_span)</li>
-            <li>Batting / skill performance[span_42](start_span)[span_42](end_span)</li>
-            <li>PV deep-work completed[span_43](start_span)[span_43](end_span)</li>
-            <li>One weakness identified[span_44](start_span)[span_44](end_span)</li>
-        </ul>
-        <small>PAGE 3/4[span_45](start_span)[span_45](end_span)</small>
-    </div>
-
-    <!-- PAGE 4 -->
-    <div class="page" id="sun">
-        <div class="nav">START | MON - FRI | SAT | SUN[span_46](start_span)[span_46](end_span)</div>
-        <h2>Sunday[span_47](start_span)[span_47](end_span)</h2>
-        <p>Recovery & The Setup: repair the body, arm the week[span_48](start_span)[span_48](end_span)</p>
-
-        <div class="time-block"><span class="time">7:00 AM - 10:00 AM:</span> Active Recovery. Sleep in slightly. Light stretching or walking. No heavy lifting or intense nets.[span_49](start_span)[span_49](end_span)</div>
-        <div class="time-block"><span class="time">10:00 AM - 1:00 PM:</span> Free Time. Family time, chores, or hobbies.[span_50](start_span)[span_50](end_span)</div>
-        <div class="time-block"><span class="time">1:00 PM - 3:00 PM:</span> Portfolio Building. Format PV CV. Finalize mock case narratives into clean PDFs. Search LinkedIn for remote PV internships/healthcare agencies.[span_51](start_span)[span_51](end_span)</div>
-        <div class="time-block"><span class="time">3:00 PM - 7:00 PM:</span> Free Time. Complete disconnect.[span_52](start_span)[span_52](end_span)</div>
-        <div class="time-block"><span class="time">7:00 PM - 8:30 PM:</span> The Monday Setup. Pack college bag, lay out morning gym clothes, and download next week's PV materials for the commute.[span_53](start_span)[span_53](end_span)</div>
-        <div class="time-block"><span class="time">8:30 PM - 9:30 PM:</span> Dinner + Wind Down. Relax and get off screens.[span_54](start_span)[span_54](end_span)</div>
-        <div class="time-block"><span class="time">9:30 PM:</span> Early Sleep. Reset your rhythm for the 5:45 AM Monday wake-up.[span_55](start_span)[span_55](end_span)</div>
-
-        <h3>MONDAY LAUNCH CHECKLIST[span_56](start_span)[span_56](end_span)</h3>
-        <ul>
-            <li>[ ] College bag packed[span_57](start_span)[span_57](end_span)</li>
-            <li>[ ] Training clothes ready[span_58](start_span)[span_58](end_span)</li>
-            <li>[ ] PV videos / PDFs downloaded[span_59](start_span)[span_59](end_span)</li>
-            <li>[ ] CV/portfolio task identified[span_60](start_span)[span_60](end_span)</li>
-            <li>[ ] Monday alarm set[span_61](start_span)[span_61](end_span)</li>
-            <li>[ ] Screens off before sleep[span_62](start_span)[span_62](end_span)</li>
-        </ul>
-        
-        <h3 class="highlight">THE RULE[span_63](start_span)[span_63](end_span)</h3>
-        <p>Miss one block? Resume at the next block. Do not turn one failure into a failed day. Consistency beats heroic bursts.[span_64](start_span)[span_64](end_span)</p>
-        <small>PAGE 4/4[span_65](start_span)[span_65](end_span)</small>
-    </div>
-
+// offline cache
+if("serviceWorker" in navigator)navigator.serviceWorker.register("sw.js").catch(()=>{});
+</script>
 </body>
 </html>
